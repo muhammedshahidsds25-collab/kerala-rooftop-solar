@@ -1,0 +1,67 @@
+
+===== run started 2026-11-07 17:46 =====
+Roofs copied to /content/work in 86 s
+12,989,365 roofs on 19 map tiles (45 s)
+Tiles to do: 19 of 19 (the rest were finished in an earlier run)
+  tile 1/19 123303212: 147,344 roofs | waited 9 s for download, computed in 24 s
+  tile 2/19 123303230: 347,302 roofs | waited 0 s for download, computed in 33 s
+  tile 3/19 123303213: 4,291 roofs | waited 0 s for download, computed in 3 s
+  tile 4/19 123303231: 675,723 roofs | waited 17 s for download, computed in 86 s
+  tile 5/19 123303233: 1,229,680 roofs | waited 0 s for download, computed in 76 s
+  tile 6/19 123321011: 329,031 roofs | waited 0 s for download, computed in 14 s
+  tile 7/19 123303320: 5,451 roofs | waited 0 s for download, computed in 6 s
+  tile 8/19 123303322: 743,632 roofs | waited 12 s for download, computed in 108 s
+  tile 9/19 123321100: 2,382,912 roofs | waited 0 s for download, computed in 171 s
+  tile 10/19 123321102: 1,958,866 roofs | waited 0 s for download, computed in 106 s
+  tile 11/19 123321120: 1,399,046 roofs | waited 0 s for download, computed in 66 s
+  tile 12/19 123321122: 349,649 roofs | waited 0 s for download, computed in 14 s
+  tile 13/19 123303323: 1,037 roofs | waited 0 s for download, computed in 2 s
+  tile 14/19 123321101: 295,117 roofs | waited 12 s for download, computed in 46 s
+  tile 15/19 123321103: 352,384 roofs | waited 0 s for download, computed in 120 s
+  tile 16/19 123321121: 892,566 roofs | waited 0 s for download, computed in 140 s
+  tile 17/19 123321123: 1,716,084 roofs | waited 0 s for download, computed in 117 s
+  tile 18/19 123321301: 159,245 roofs | waited 0 s for download, computed in 10 s
+  tile 19/19 123321130: 5 roofs | waited 0 s for download, computed in 1 s
+All tiles done in 19.9 min
+Saved /content/drive/MyDrive/rooftop_solar/data/features/canopy_features.parquet in 19 s
+
+CHECKS (roofs_with_canopy = all_roofs and distinct_ids = roofs_with_canopy is ideal)
+ all_roofs  roofs_with_canopy  distinct_ids
+  12989365           12989365      12989365
+
+CANOPY FEATURES: share of roofs at 0 and 5th / 50th / 95th percentile
+     feature  pct_zero  p5_p50_p95
+chm_roof_max      17.8  [0, 5, 14]
+ chm_max_15m       1.6 [3, 11, 17]
+tall_pct_15m      10.1 [0, 26, 76]
+tall_pct_30m       2.7 [2, 34, 77]
+
+BY DISTRICT
+          district   roofs  avg_roof_max_m  avg_max_15m_m  avg_tall_15m_pct  avg_tall_30m_pct
+        Malappuram 1596528             6.1           11.7              33.3              39.1
+         Ernakulam 1284867             3.5            7.9              18.1              22.9
+          Thrissur 1240185             5.6           11.1              27.5              32.5
+Thiruvananthapuram 1215221             5.9           10.9              31.5              37.6
+          Palakkad 1105066             4.5           10.0              23.3              28.5
+            Kollam 1048413             5.7           10.5              32.7              39.4
+         Kozhikode 1031097             7.0           12.3              40.5              46.7
+            Kannur  986446             6.0           11.9              37.1              44.1
+         Alappuzha  861713             6.0           11.2              32.5              36.4
+          Kottayam  795538             5.0           10.8              28.1              35.5
+    Pathanamthitta  584627             4.9           10.6              29.1              38.3
+         Kasaragod  494465             4.7            9.4              26.0              32.5
+            Idukki  402320             5.3           11.2              30.6              38.6
+           Wayanad  342879             5.5           11.8              32.0              39.3
+
+HOW WELL EACH FEATURE ALONE SEPARATES GOOD FROM NOT-GOOD ROOFS (0.5 = no signal; far from 0.5 = useful)
+     feature  AUC your labels  AUC AI labels
+    tree_28m            0.407          0.431
+   tree_140m            0.373          0.399
+   tree_300m            0.386          0.425
+chm_roof_max            0.390          0.371
+ chm_max_15m            0.417          0.427
+tall_pct_15m            0.378          0.363
+tall_pct_30m            0.390          0.391
+
+Total time 23.2 min
+ALL DONE

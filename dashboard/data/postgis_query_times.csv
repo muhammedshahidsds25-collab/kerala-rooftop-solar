@@ -1,0 +1,8 @@
+test,ms,tables_read
+roofs within 1 km of Kochi - no index,20462.0,1
+roofs within 1 km of Kochi - with GiST index,45.4,1
+Wayanad total - normal table,1237.7,1
+Wayanad total - partitioned table,117.0,1
+spatial join: roofs inside Wayanad polygon,1837.3,2
+5 nearest roofs to a point,0.4,1
+best roofs within 2 km,185.0,1

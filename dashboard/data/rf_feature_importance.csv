@@ -1,0 +1,16 @@
+feature,importance
+log_area,0.234
+tall_pct_15m,0.093
+ai_confidence,0.093
+chm_roof_max,0.081
+compactness,0.078
+tall_pct_30m,0.069
+tree_140m,0.068
+log_crowding,0.066
+chm_max_15m,0.065
+tree_28m,0.052
+tree_300m,0.05
+seen_built_up,0.028
+low_conf,0.009
+area_type,0.007
+source_code,0.006

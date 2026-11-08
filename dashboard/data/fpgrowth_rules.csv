@@ -1,0 +1,37 @@
+if_roof_has,then_it_has,support,confidence,lift
+seen as=built-up + area=town (>=150),trees 300m=low (<70%),0.064,0.77,4.19
+trees 300m=low (<70%) + area=town (>=150),seen as=built-up,0.064,0.708,3.93
+seen as=built-up + trees 300m=low (<70%),area=town (>=150),0.064,0.657,3.47
+AI shape=low confidence + shape=regular,roof=small (<50 m2),0.098,0.772,2.12
+AI shape=low confidence,roof=small (<50 m2),0.125,0.733,2.01
+area=village (<50 bldgs/hex) + seen as=tree,trees 300m=high (>=95%),0.148,0.66,1.56
+area=village (<50 bldgs/hex),trees 300m=high (>=95%),0.151,0.621,1.46
+trees 300m=high (>=95%),seen as=tree,0.411,0.97,1.2
+roof=large (120-500 m2) + trees 300m=medium (70-95%),area=suburb (50-150),0.062,0.677,1.2
+area=village (<50 bldgs/hex) + roof=medium (50-120 m2),seen as=tree,0.094,0.942,1.17
+area=village (<50 bldgs/hex),seen as=tree,0.224,0.92,1.14
+trees 300m=medium (70-95%),area=suburb (50-150),0.25,0.639,1.13
+AI shape=low confidence + area=suburb (50-150),seen as=tree,0.087,0.894,1.11
+AI shape=low confidence,seen as=tree,0.149,0.873,1.08
+roof=medium (50-120 m2) + area=suburb (50-150),seen as=tree,0.2,0.874,1.08
+roof=small (<50 m2) + area=suburb (50-150),seen as=tree,0.179,0.869,1.08
+roof=large (120-500 m2) + seen as=tree,area=suburb (50-150),0.099,0.613,1.08
+roof=small (<50 m2),shape=regular,0.301,0.826,1.06
+area=suburb (50-150),seen as=tree,0.478,0.844,1.05
+roof=medium (50-120 m2),seen as=tree,0.34,0.834,1.03
+roof=small (<50 m2),seen as=tree,0.305,0.836,1.03
+shape=regular,seen as=tree,0.642,0.825,1.02
+seen as=tree,shape=regular,0.642,0.794,1.02
+trees 300m=high (>=95%),shape=regular,0.337,0.796,1.02
+area=village (<50 bldgs/hex),shape=regular,0.192,0.787,1.01
+roof=medium (50-120 m2),shape=regular,0.321,0.786,1.01
+trees 300m=medium (70-95%),seen as=tree,0.318,0.812,1.0
+trees 300m=medium (70-95%),shape=regular,0.303,0.774,1.0
+area=suburb (50-150),shape=regular,0.44,0.777,1.0
+area=town (>=150),shape=regular,0.145,0.764,0.98
+AI shape=low confidence,shape=regular,0.127,0.747,0.96
+trees 300m=low (<70%),shape=regular,0.137,0.743,0.96
+shape=irregular,seen as=tree,0.166,0.746,0.92
+seen as=built-up,shape=regular,0.127,0.704,0.91
+roof=large (120-500 m2),seen as=tree,0.161,0.731,0.9
+roof=large (120-500 m2),shape=regular,0.153,0.692,0.89

@@ -1,0 +1,58 @@
+Inputs copied to /content/work in 86 s
+POSTGIS="3.4.2 c19ce56" [EXTENSION] PGSQL="160" GEOS="3.12.1
+Copied into PostgreSQL in 0.9 min
+Geometry columns added in 1.7 min | roofs: 12,989,365 | districts: 14 | roofs table size: 3276 MB
+
+SPEED TEST 1: spatial index (GiST)
+  roofs within 1 km of Kochi - no index: 20,462.0 ms  (1 table(s) read)
+  (building the spatial indexes took 3.0 min)
+  roofs within 1 km of Kochi - with GiST index: 45.4 ms  (1 table(s) read)
+ roofs gwh_per_year
+  5250        49.85
+
+Partitioned copy (one partition per district, 14 partitions) made in 1.7 min
+SPEED TEST 2: partitioning
+  Wayanad total - normal table: 1,237.7 ms  (1 table(s) read)
+  Wayanad total - partitioned table: 117.0 ms  (1 table(s) read)
+ count twh_per_year
+342879        2.787
+
+QUERY A: PostGIS spatial join - roofs inside the Wayanad polygon (should match the district column)
+  spatial join: roofs inside Wayanad polygon: 1,837.3 ms  (2 table(s) read)
+ by_polygon  by_column
+     342879     342879
+
+QUERY B: the 5 roofs nearest to Thiruvananthapuram centre (index-based nearest neighbour)
+  5 nearest roofs to a point: 0.4 ms  (1 table(s) read)
+                                  id area_m2  kwp metres_away
+83379480-99c6-4b15-9bd0-e0ac7116ccf6   230.9 13.9         6.8
+9da057e3-065e-4c4c-aaf9-ea740c51a0c5   143.6  8.6        12.1
+60a2f139-6532-43ad-bb2e-d41ebebbb528    80.1  4.8        16.2
+34ce9c58-c3c7-48ef-8e18-ee671cae42d3    92.8  5.6        21.6
+abada180-6abd-4285-a6ae-7ea70f70b12b    34.5  2.1        22.4
+
+QUERY C: best 10 roofs within 2 km of Thiruvananthapuram centre (seen as built-up, little tree cover)
+  best roofs within 2 km: 185.0 ms  (1 table(s) read)
+                                  id area_m2   kwp units_per_year  tree_pct_140m
+583ddfe4-0454-4129-a0c6-35b958f5d71b   11685 701.1        1118272            0.0
+70665db8-c836-463d-9869-b6e1e370f465    6079 364.8         583796           27.1
+7393e519-c05d-4cc4-8e88-2fbc98f94e09    5585 335.1         533444            2.6
+d362cbb9-732a-4999-bead-3dd7712ede84    5600 336.0         530799           29.4
+7757a317-8632-49a8-845a-8a5490761ed6    4747 284.8         451874           28.0
+827184e6-7d82-44cb-80f3-aa2d81d5c899    4588 275.3         438176            0.0
+3e6491a5-ebbb-4d58-be6d-e1cff54dc78b    4509 270.5         431526           21.0
+bcb119ba-3ec5-4853-a8c6-02bf8a851f65    4431 265.9         420400           10.2
+03978d45-738b-41ed-bd02-b04728a56462    4124 247.4         392605           12.5
+c0d92641-49f5-4015-a758-91591b6aab20    3164 189.8         301360           24.4
+
+ALL QUERY TIMES
+                                        test      ms  tables_read
+       roofs within 1 km of Kochi - no index 20462.0            1
+roofs within 1 km of Kochi - with GiST index    45.4            1
+                Wayanad total - normal table  1237.7            1
+           Wayanad total - partitioned table   117.0            1
+  spatial join: roofs inside Wayanad polygon  1837.3            2
+                  5 nearest roofs to a point     0.4            1
+                      best roofs within 2 km   185.0            1
+Total time 10.3 min
+ALL DONE

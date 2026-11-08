@@ -1,0 +1,74 @@
+Roof features copied to /content/work in 107 s
+Java: openjdk version "17.0.20.1" 2026-08-18
+Spark 4.1.3 | CPU cores: 2 | Spark memory: 8 GB
+Roofs loaded: 12,989,365 in 81 s
+
+Hexagons summarised: 260,447 in 45 s
+  k = 3: silhouette 0.699
+  k = 4: silhouette 0.452
+  k = 5: silhouette 0.446
+  k = 6: silhouette 0.459
+  k = 7: silhouette 0.391
+  k = 8: silhouette 0.381
+Best number of area types (highest silhouette): k = 3
+ k  silhouette
+ 3       0.699
+ 4       0.452
+ 5       0.446
+ 6       0.459
+ 7       0.391
+ 8       0.381
+
+AREA TYPES (one row per cluster; Claude will name them from these profiles)
+ cluster  hexagons   roofs  avg_roofs_per_hex  median_roof_m2  pct_seen_built_up  tree_140m  tree_300m  pct_of_kerala_potential
+       1     28688 3338514              116.0            87.3               46.5       61.7       63.9                     31.3
+       0    216229 9457382               44.0            68.1                4.1       95.5       93.9                     67.4
+       2     15530  193469               12.0            54.5                4.1       46.1       41.2                      1.3
+
+AREA TYPES BY DISTRICT (share of hexagons, %)
+          district  cluster_0  cluster_1  cluster_2
+         Alappuzha       63.2       13.9       22.9
+         Ernakulam       69.0       26.2        4.9
+            Idukki       84.1        6.0        9.9
+            Kannur       88.2        7.7        4.1
+         Kasaragod       86.1        8.3        5.6
+            Kollam       86.6       11.0        2.3
+          Kottayam       84.8        8.4        6.8
+         Kozhikode       94.0        5.1        0.9
+        Malappuram       91.3        6.8        1.9
+          Palakkad       74.1       13.7       12.2
+    Pathanamthitta       91.7        6.5        1.8
+Thiruvananthapuram       82.6       16.6        0.8
+          Thrissur       76.6       17.4        5.9
+           Wayanad       88.8        5.2        6.0
+K-means done in 4.0 min; saved 260,447 hexagons to data/features/hex_clusters.parquet
+
+Baskets built for 12,989,365 roofs
+Frequent item combinations (in at least 5% of roofs): 188
+Rules found (confidence >= 60%): 186 | after removing near-copies: 36 | FP-Growth took 2.7 min
+
+TOP 20 RULES BY LIFT (lift > 1 = the items appear together more often than by chance)
+                                           if_roof_has             then_it_has  support  confidence  lift
+                  seen as=built-up + area=town (>=150)   trees 300m=low (<70%)    0.064       0.770  4.19
+             trees 300m=low (<70%) + area=town (>=150)        seen as=built-up    0.064       0.708  3.93
+              seen as=built-up + trees 300m=low (<70%)       area=town (>=150)    0.064       0.657  3.47
+               AI shape=low confidence + shape=regular     roof=small (<50 m2)    0.098       0.772  2.12
+                               AI shape=low confidence     roof=small (<50 m2)    0.125       0.733  2.01
+           area=village (<50 bldgs/hex) + seen as=tree trees 300m=high (>=95%)    0.148       0.660  1.56
+                          area=village (<50 bldgs/hex) trees 300m=high (>=95%)    0.151       0.621  1.46
+                               trees 300m=high (>=95%)            seen as=tree    0.411       0.970  1.20
+  roof=large (120-500 m2) + trees 300m=medium (70-95%)    area=suburb (50-150)    0.062       0.677  1.20
+area=village (<50 bldgs/hex) + roof=medium (50-120 m2)            seen as=tree    0.094       0.942  1.17
+                          area=village (<50 bldgs/hex)            seen as=tree    0.224       0.920  1.14
+                            trees 300m=medium (70-95%)    area=suburb (50-150)    0.250       0.639  1.13
+        AI shape=low confidence + area=suburb (50-150)            seen as=tree    0.087       0.894  1.11
+                               AI shape=low confidence            seen as=tree    0.149       0.873  1.08
+        roof=medium (50-120 m2) + area=suburb (50-150)            seen as=tree    0.200       0.874  1.08
+            roof=small (<50 m2) + area=suburb (50-150)            seen as=tree    0.179       0.869  1.08
+                roof=large (120-500 m2) + seen as=tree    area=suburb (50-150)    0.099       0.613  1.08
+                                   roof=small (<50 m2)           shape=regular    0.301       0.826  1.06
+                                  area=suburb (50-150)            seen as=tree    0.478       0.844  1.05
+                               roof=medium (50-120 m2)            seen as=tree    0.340       0.834  1.03
+
+Total time 12.0 min
+ALL DONE

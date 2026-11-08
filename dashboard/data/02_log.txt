@@ -1,0 +1,64 @@
+Raw files copied to /content/work
+Java: openjdk version "17.0.20.1" 2026-08-18
+Sedona JARs: ['sedona-spark-shaded-4.1_2.13-1.9.1.jar', 'geotools-wrapper-1.9.1-33.5.jar']
+Spark 4.1.3 | CPU cores: 2 | Spark memory: 9 GB
+Buildings in the download box: 19,355,143
+Join + cleaning + save took 9.8 min
+
+CLEANING REPORT
+                   step    count
+        in_download_box 19355143
+         outside_kerala  6350240
+          inside_kerala 13004903
+       repaired_invalid        0
+     duplicates_removed        0
+      too_small_removed    15538
+                   kept 12989365
+kept_but_low_confidence  2213255
+
+BY DISTRICT
+          district  buildings    kept  median_roof_m2  total_roof_km2
+        Malappuram    1596833 1596528            64.7           133.3
+         Ernakulam    1288704 1284867            73.9           132.5
+          Thrissur    1241563 1240185            72.5           120.3
+Thiruvananthapuram    1215417 1215221            61.9           100.2
+          Palakkad    1105582 1105066            63.4            90.7
+            Kollam    1048618 1048413            62.4            87.4
+         Kozhikode    1031454 1031097            66.5            86.9
+            Kannur     986625  986446            90.9           102.4
+         Alappuzha     867815  861713            65.7            77.8
+          Kottayam     796068  795538            69.1            77.8
+    Pathanamthitta     586171  584627            62.0            51.8
+         Kasaragod     494549  494465            73.5            45.8
+            Idukki     402402  402320            66.7            36.7
+           Wayanad     343102  342879            70.8            31.1
+{'buildings': 10000, 'plain_spark_s': 3.2, 'sedona_s': 0.7, 'speedup_x': 4.6, 'matched_plain': 8090, 'matched_sedona': 8090, 'note': 'measured'}
+{'buildings': 100000, 'plain_spark_s': 4.4, 'sedona_s': 1.3, 'speedup_x': 3.5, 'matched_plain': 80589, 'matched_sedona': 80589, 'note': 'measured'}
+{'buildings': 1000000, 'plain_spark_s': 41.6, 'sedona_s': 9.2, 'speedup_x': 4.5, 'matched_plain': 804073, 'matched_sedona': 804073, 'note': 'measured'}
+
+SPARK vs SEDONA (seconds)
+ buildings  plain_spark_s  sedona_s  speedup_x  matched_plain  matched_sedona                                                        note
+     10000            3.2       0.7        4.6           8090            8090                                                    measured
+    100000            4.4       1.3        3.5          80589           80589                                                    measured
+   1000000           41.6       9.2        4.5         804073          804073                                                    measured
+  19355143          805.2     136.7        5.9           <NA>        13004903 plain Spark estimated; Sedona measured (incl. reading file)
+
+MAPREDUCE RESULT
+          district  buildings  roof_km2
+        Malappuram    1596528    133.31
+         Ernakulam    1284867    132.51
+          Thrissur    1240185    120.32
+Thiruvananthapuram    1215221    100.16
+          Palakkad    1105066     90.71
+            Kollam    1048413     87.36
+         Kozhikode    1031097     86.88
+            Kannur     986446    102.38
+         Alappuzha     861713     77.82
+          Kottayam     795538     77.82
+    Pathanamthitta     584627     51.82
+         Kasaragod     494465     45.80
+            Idukki     402320     36.73
+           Wayanad     342879     31.12
+MapReduce (RDD + Python): 97.6 s | Spark SQL: 9.6 s
+Saved /content/drive/MyDrive/rooftop_solar/data/clean/buildings_clean in 27 s
+ALL DONE

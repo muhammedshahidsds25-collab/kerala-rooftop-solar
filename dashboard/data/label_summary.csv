@@ -1,0 +1,5 @@
+label,roofs
+1 = good,156
+0 = bad,120
+2 = not a building,14
+empty (skipped),10

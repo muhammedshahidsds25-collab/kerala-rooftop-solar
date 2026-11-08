@@ -1,0 +1,8 @@
+feature,AUC your labels,AUC AI labels
+tree_28m,0.407,0.431
+tree_140m,0.373,0.399
+tree_300m,0.386,0.425
+chm_roof_max,0.39,0.371
+chm_max_15m,0.417,0.427
+tall_pct_15m,0.378,0.363
+tall_pct_30m,0.39,0.391

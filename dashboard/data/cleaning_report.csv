@@ -1,0 +1,9 @@
+step,count
+in_download_box,19355143
+outside_kerala,6350240
+inside_kerala,13004903
+repaired_invalid,0
+duplicates_removed,0
+too_small_removed,15538
+kept,12989365
+kept_but_low_confidence,2213255

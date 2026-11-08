@@ -1,0 +1,4 @@
+cluster,hexagons,roofs,avg_roofs_per_hex,median_roof_m2,pct_seen_built_up,tree_140m,tree_300m,pct_of_kerala_potential
+1,28688,3338514,116.0,87.3,46.5,61.7,63.9,31.3
+0,216229,9457382,44.0,68.1,4.1,95.5,93.9,67.4
+2,15530,193469,12.0,54.5,4.1,46.1,41.2,1.3

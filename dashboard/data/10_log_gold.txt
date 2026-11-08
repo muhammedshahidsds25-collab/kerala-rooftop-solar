@@ -1,0 +1,114 @@
+Inputs copied to /content/work in 91 s
+Java: openjdk version "17.0.20.1" 2026-08-18
+Gold labels: 218 roofs where you and the AI agree + 72 of 75 disagreements blind-checked
+  WARNING: 3 disagreements are not blind-checked yet, so they are left out
+
+LABELS (gold)
+             label  roofs
+          1 = good    156
+           0 = bad    120
+2 = not a building     14
+   empty (skipped)     10
+Training labels: 290 roofs (156 good, 134 not good) from 14 districts
+
+Spark 4.1.3 | CPU cores: 2 | Spark memory: 8 GB
+Labelled roofs matched to features: 290 of 290 (0 of them without canopy data)
+
+ACCURACY CHECKS (6.5 min)
+                                                 check  accuracy  precision  recall    f1  balanced_accuracy  roc_auc  tp  fp  tn  fn
+       RF without tree height - leave one district out     0.679      0.733   0.635 0.680              0.683    0.712  99  36  98  57
+          RF with tree height - leave one district out     0.672      0.707   0.667 0.686              0.673    0.719 104  43  91  52
+                   RF with tree height - random 5-fold     0.703      0.733   0.705 0.719              0.703    0.729 110  40  94  46
+RF with tree height - real buildings only (no label 2)     0.663      0.709   0.686 0.697              0.660    0.728 107  44  76  49
+              Simple rule (>= 40 m2 and seen built-up)     0.583      0.949   0.237 0.379              0.611    0.611  37   2 132 119
+                      Always say "not good" (baseline)     0.462      0.000   0.000 0.000              0.500    0.500   0   0 134 156
+                          Always say "good" (baseline)     0.538      0.538   1.000 0.700              0.500    0.500 156 134   0   0
+
+LEAVE-ONE-DISTRICT-OUT ACCURACY BY DISTRICT
+          district  labelled  accuracy
+         Alappuzha        21      0.62
+         Ernakulam        22      0.59
+            Idukki        21      0.81
+            Kannur        20      0.70
+         Kasaragod        20      0.65
+            Kollam        19      0.58
+          Kottayam        21      0.67
+         Kozhikode        21      0.71
+        Malappuram        21      0.62
+          Palakkad        21      0.57
+    Pathanamthitta        20      0.60
+Thiruvananthapuram        21      0.81
+          Thrissur        21      0.81
+           Wayanad        21      0.67
+
+FEATURE IMPORTANCE (share of the model's decisions, adds up to 1)
+      feature  importance
+     log_area       0.234
+ tall_pct_15m       0.093
+ai_confidence       0.093
+ chm_roof_max       0.081
+  compactness       0.078
+ tall_pct_30m       0.069
+    tree_140m       0.068
+ log_crowding       0.066
+  chm_max_15m       0.065
+     tree_28m       0.052
+    tree_300m       0.050
+seen_built_up       0.028
+     low_conf       0.009
+    area_type       0.007
+  source_code       0.006
+
+FAKE BUILDINGS FOUND WHILE LABELLING
+      ai_shape  labelled  not_a_building  pct_not_a_building
+low confidence        54               3                 5.6
+        normal       236              11                 4.7
+Final model trained in 9 s
+
+Predicted all roofs in 11.2 min
+
+REALISTIC SOLAR POTENTIAL (roofs the model calls suitable)
+          district    roofs  suitable_roofs  pct_suitable  all_roofs_gw  suitable_gw  suitable_twh_per_year
+         Ernakulam  1284867          898471          69.9          7.95         6.93                  10.57
+          Thrissur  1240185          700968          56.5          7.22         5.72                   8.75
+        Malappuram  1596528          678037          42.5          8.00         5.30                   8.04
+Thiruvananthapuram  1215221          617573          50.8          6.01         4.39                   6.83
+            Kannur   986446          501251          50.8          6.14         4.27                   6.56
+          Palakkad  1105066          634208          57.4          5.44         4.19                   6.40
+            Kollam  1048413          509289          48.6          5.24         3.76                   5.78
+          Kottayam   795538          426201          53.6          4.67         3.62                   5.46
+         Alappuzha   861713          442404          51.3          4.67         3.48                   5.41
+         Kozhikode  1031097          380479          36.9          5.21         3.13                   4.76
+    Pathanamthitta   584627          279857          47.9          3.11         2.31                   3.47
+         Kasaragod   494465          273525          55.3          2.75         2.09                   3.25
+            Idukki   402320          191004          47.5          2.20         1.53                   2.23
+           Wayanad   342879          159663          46.6          1.87         1.29                   1.92
+            KERALA 12989365         6692930          51.5         70.48        52.01                  79.43
+
+SUITABLE SHARE BY AREA TYPE (0 = homestead villages, 1 = towns, 2 = sparse open land)
+ area_type   roofs  pct_suitable  suitable_gw
+         0 9457382          41.8        31.04
+         1 3338514          78.0        20.19
+         2  193469          69.1         0.79
+
+RULES FOR SUITABLE ROOFS (18 rules, 3.5 min)
+                                                        if_roof_has         then  support  confidence  lift
+                         seen as=built-up + roof=large (120-500 m2) SUITABLE=yes    0.057       1.000  1.94
+                         seen as=built-up + roof=medium (50-120 m2) SUITABLE=yes    0.064       0.997  1.93
+                    trees 300m=low (<70%) + roof=large (120-500 m2) SUITABLE=yes    0.046       0.992  1.93
+                        area=town (>=150) + roof=large (120-500 m2) SUITABLE=yes    0.041       0.978  1.90
+               roof=large (120-500 m2) + trees 300m=medium (70-95%) SUITABLE=yes    0.088       0.959  1.86
+trees 300m=low (<70%) + area=town (>=150) + roof=medium (50-120 m2) SUITABLE=yes    0.035       0.952  1.85
+                           seen as=built-up + trees 300m=low (<70%) SUITABLE=yes    0.092       0.936  1.82
+                                            roof=large (120-500 m2) SUITABLE=yes    0.207       0.939  1.82
+                                                   seen as=built-up SUITABLE=yes    0.164       0.912  1.77
+                    trees 300m=low (<70%) + roof=medium (50-120 m2) SUITABLE=yes    0.065       0.903  1.75
+                          trees 300m=low (<70%) + area=town (>=150) SUITABLE=yes    0.079       0.873  1.69
+                                              trees 300m=low (<70%) SUITABLE=yes    0.150       0.816  1.58
+                        area=town (>=150) + roof=medium (50-120 m2) SUITABLE=yes    0.061       0.764  1.48
+                                                  area=town (>=150) SUITABLE=yes    0.130       0.687  1.33
+               trees 300m=medium (70-95%) + roof=medium (50-120 m2) SUITABLE=yes    0.097       0.614  1.19
+
+Saved /content/drive/MyDrive/rooftop_solar/data/features/roof_predictions_gold in 15 s
+Total time 28.9 min
+ALL DONE

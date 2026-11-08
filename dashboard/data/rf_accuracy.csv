@@ -1,0 +1,8 @@
+check,accuracy,precision,recall,f1,balanced_accuracy,roc_auc,tp,fp,tn,fn
+RF without tree height - leave one district out,0.679,0.733,0.635,0.68,0.683,0.712,99,36,98,57
+RF with tree height - leave one district out,0.672,0.707,0.667,0.686,0.673,0.719,104,43,91,52
+RF with tree height - random 5-fold,0.703,0.733,0.705,0.719,0.703,0.729,110,40,94,46
+RF with tree height - real buildings only (no label 2),0.663,0.709,0.686,0.697,0.66,0.728,107,44,76,49
+Simple rule (>= 40 m2 and seen built-up),0.583,0.949,0.237,0.379,0.611,0.611,37,2,132,119
+"Always say ""not good"" (baseline)",0.462,0.0,0.0,0.0,0.5,0.5,0,0,134,156
+"Always say ""good"" (baseline)",0.538,0.538,1.0,0.7,0.5,0.5,156,134,0,0

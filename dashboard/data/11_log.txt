@@ -1,0 +1,55 @@
+Roof outlines and predictions copied to /content/work in 198 s
+Java: openjdk version "17.0.20.1" 2026-08-18
+Sedona JARs: ['sedona-spark-shaded-4.1_2.13-1.9.1.jar', 'geotools-wrapper-1.9.1-33.5.jar']
+Spark 4.1.3 | CPU cores: 2 | Spark memory: 8 GB
+Sedona: 6,692,930 suitable roofs transformed to metres and shrunk 3 ways in 6.4 min (17,521 roofs per second)
+CHECK area in metres / area from notebook 02 (1% / median / 99%): [0.9992, 0.9997, 1.0006] (all near 1 is ideal)
+
+FREE SHARE OF SUITABLE ROOFS (main setting: 0.6 m edge, 8 m2 stair room and tank), by roof size
+             roof_size   roofs  free_share_pct    p10_p50_p90_pct  pct_with_no_room
+      1 small (<50 m2)  974867            39.8 [16.0, 40.0, 50.0]               3.1
+  2 medium (50-120 m2) 2942478            65.2 [56.0, 65.0, 71.0]               0.0
+  3 large (120-500 m2) 2689127            77.9 [73.0, 76.0, 82.0]               0.0
+4 very large (>500 m2)   86458            91.2 [86.0, 89.0, 93.0]               0.0
+                 5 ALL 6692930            74.1 [45.0, 69.0, 79.0]               0.5
+
+SENSITIVITY: KERALA POTENTIAL OF THE SUITABLE ROOFS UNDER EACH ASSUMPTION
+                               method  free_share_pct    gw  twh_per_year
+old guess: 60% of every suitable roof            60.0 52.02         79.42
+          edge 0.3 m, stair room 0 m2            89.9 77.91        118.93
+          edge 0.3 m, stair room 8 m2            83.7 72.55        110.75
+         edge 0.3 m, stair room 12 m2            80.6 69.88        106.67
+          edge 0.6 m, stair room 0 m2            80.3 69.63        106.28
+ edge 0.6 m, stair room 8 m2  <- main            74.1 64.28         98.11
+         edge 0.6 m, stair room 12 m2            71.1 61.62         94.06
+          edge 1.0 m, stair room 0 m2            68.5 59.35         90.59
+          edge 1.0 m, stair room 8 m2            62.3 54.04         82.47
+         edge 1.0 m, stair room 12 m2            59.4 51.46         78.53
+
+POTENTIAL PER DISTRICT (main setting; realistic = at most 3 kW per suitable roof)
+          district  suitable_roofs  free_share_pct    gw  twh_per_year  realistic_gw  realistic_twh_per_year
+         Ernakulam          898471            74.5  8.60         13.11          2.41                    3.68
+          Thrissur          700968            74.9  7.13         10.92          1.96                    3.00
+        Malappuram          678037            73.9  6.53          9.89          1.91                    2.90
+Thiruvananthapuram          617573            72.8  5.32          8.28          1.67                    2.60
+            Kannur          501251            75.5  5.38          8.25          1.45                    2.22
+          Palakkad          634208            71.5  5.00          7.63          1.71                    2.60
+            Kollam          509289            73.2  4.59          7.05          1.40                    2.15
+          Kottayam          426201            75.5  4.56          6.86          1.18                    1.78
+         Alappuzha          442404            74.5  4.32          6.71          1.22                    1.89
+         Kozhikode          380479            74.6  3.89          5.91          1.08                    1.64
+    Pathanamthitta          279857            74.9  2.89          4.34          0.78                    1.17
+         Kasaragod          273525            73.6  2.57          3.98          0.76                    1.18
+            Idukki          191004            74.8  1.91          2.78          0.52                    0.76
+           Wayanad          159663            74.6  1.60          2.39          0.45                    0.67
+            KERALA         6692930            74.1 64.29         98.10         18.50                   28.24
+
+BY AREA TYPE (0 = homestead villages, 1 = towns, 2 = sparse open land)
+ area_type  suitable_roofs  free_share_pct    gw  realistic_gw
+         0         3953463            74.0 38.28         11.28
+         1         2605696            74.5 25.08          6.86
+         2          133771            69.9  0.92          0.34
+
+Saved /content/drive/MyDrive/rooftop_solar/data/features/usable_area in 37 s
+Sedona shrink step took 6.4 min for 6,692,930 roofs
+ALL DONE

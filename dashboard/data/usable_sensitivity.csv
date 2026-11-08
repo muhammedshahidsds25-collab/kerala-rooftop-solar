@@ -1,0 +1,11 @@
+method,free_share_pct,gw,twh_per_year
+old guess: 60% of every suitable roof,60.0,52.02,79.42
+"edge 0.3 m, stair room 0 m2",89.9,77.91,118.93
+"edge 0.3 m, stair room 8 m2",83.7,72.55,110.75
+"edge 0.3 m, stair room 12 m2",80.6,69.88,106.67
+"edge 0.6 m, stair room 0 m2",80.3,69.63,106.28
+"edge 0.6 m, stair room 8 m2  <- main",74.1,64.28,98.11
+"edge 0.6 m, stair room 12 m2",71.1,61.62,94.06
+"edge 1.0 m, stair room 0 m2",68.5,59.35,90.59
+"edge 1.0 m, stair room 8 m2",62.3,54.04,82.47
+"edge 1.0 m, stair room 12 m2",59.4,51.46,78.53
