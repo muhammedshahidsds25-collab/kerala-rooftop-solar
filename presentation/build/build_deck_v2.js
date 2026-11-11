@@ -100,7 +100,7 @@ const td = (t, o = {}) => ({ text: t, options: { fontSize: 14, color: C.text1, .
   const hx = size('cover_kerala_hex.png'), hh = 5.3, hw = hh * hx.w / hx.h;
   s.addImage({ path: FIG + 'cover_kerala_hex.png', x: 9.5 - hw, y: 0.16, w: hw, h: hh, altText: 'Kerala drawn from 7,070 glowing hexagons of rooftop solar capacity', objectName: 'Kerala hexagon art' });
   T(s, 'Each glowing cell = solar potential of ~5 km² of roofs', 5.9, 5.1, 1.75, 0.4, { fontSize: 10, italic: true, color: C.accent5, objectName: 'Art caption' });
-  s.addNotes('TIMING GUIDE (about 12 minutes): Problem 2 min (slides 1-4), Method 6 min (slides 5-15), Results 3 min (16-19), Wrap-up 1 min (20-21). If short of time, skip slide 8 (speed tests) and slide 11 (area types).\n\nGood morning. My project asks a simple question: how much electricity could Kerala make from its own rooftops? To answer it I mapped every building in Kerala, about 13 million, using spatial big data tools. The picture on the right is Kerala drawn only from my results; every glowing cell is a piece of land with solar potential.');
+  s.addNotes('TIMING GUIDE (about 12 minutes): Problem 2 min (slides 1-4), Method 6 min (slides 5-16), Results 3 min (17-20), Wrap-up 1 min (21-22). If short of time, skip slide 8 (speed tests) and slide 12 (area types).\n\nGood morning. My project asks a simple question: how much electricity could Kerala make from its own rooftops? To answer it I mapped every building in Kerala, about 13 million, using spatial big data tools. The picture on the right is Kerala drawn only from my results; every glowing cell is a piece of land with solar potential.');
 
   // 2 Hook
   s = pres.addSlide({ masterName: 'COVER', sectionTitle: 'Problem' });
@@ -306,6 +306,47 @@ const td = (t, o = {}) => ({ text: t, options: { fontSize: 14, color: C.text1, .
   s.addNotes('This slide shows how the features are made and used. On the left are the data sources. The building outline gives two groups: size and shape, and outline quality. The ESA WorldCover map gives tree cover in three rings and whether the roof looks built-up. The Meta map gives four tree-height numbers. The H3 hexagons give crowding and the area type from K-means. Together that is 2 + 3 + 4 + 4 + 2 = 15 numbers for every roof. The Random Forest, with 200 trees, learned from 290 labelled roofs how these numbers relate to good and not good roofs, and then judged all 13 million roofs. Sunshine is not a model input, because it changes only slowly across Kerala and mostly shows location; it is used later to turn free area into electricity.');
 
   }
+  // 9c What the features tell the model (direction of each clue)
+  {
+    const s2 = pres.addSlide({ masterName: 'CONTENT', sectionTitle: 'Method' });
+    s2.addText('What the features tell the model', { placeholder: 'title' });
+    badge(s2, 3);
+    const line2 = (x1, y1, x2, y2, name) => s2.addShape(pres.ShapeType.line, { x: Math.min(x1, x2), y: Math.min(y1, y2), w: Math.max(Math.abs(x2 - x1), 0.01),
+      h: Math.max(Math.abs(y2 - y1), 0.01), flipH: x2 < x1, flipV: y2 < y1, line: { color: HEX.grey, width: 1.5, endArrowType: 'triangle' }, objectName: name });
+    // the roof in the middle
+    const rcx = 5.0, rcy = 2.3;
+    s2.addShape(pres.ShapeType.roundRect, { x: rcx - 0.9, y: rcy - 0.5, w: 1.8, h: 1.0, rectRadius: 0.1, fill: { color: C.accent1 }, line: { color: HEX.ink, width: 2 }, objectName: 'Roof' });
+    T(s2, [{ text: 'one roof', options: { bold: true, fontSize: 15, breakLine: true } }, { text: '15 numbers', options: { fontSize: 12 } }],
+      rcx - 0.9, rcy - 0.5, 1.8, 1.0, { align: 'center', valign: 'middle', objectName: 'Roof label' });
+    // cards: [title, columns, sentence, marker, markerColour, x, y, w, h, anchor on roof edge]
+    const UP = '▲ more = good', DOWN = '▼ more = not good';
+    const K = [
+      ['Size and shape', 2, 'Bigger roof = more room for panels', UP, '1C7C54', 0.5, 1.2, 3.1, 1.15, [rcx - 0.9, rcy - 0.25]],
+      ['Crowding + area type', 2, 'Dense town = larger, less shaded roofs', UP, '1C7C54', 0.5, 3.0, 3.1, 1.15, [rcx - 0.9, rcy + 0.25]],
+      ['Tree cover', 4, 'More trees around = more shade', DOWN, 'C0392B', 6.4, 1.2, 3.1, 1.15, [rcx + 0.9, rcy - 0.25]],
+      ['Tree height', 4, 'Tall trees close to the roof cast shade', DOWN, 'C0392B', 6.4, 3.0, 3.1, 1.15, [rcx + 0.9, rcy + 0.25]],
+    ];
+    K.forEach(([t, n, sentence, mark, col, x, y, w, h, [ax, ay]], i) => {
+      s2.addShape(pres.ShapeType.roundRect, { x, y, w, h, rectRadius: 0.08, fill: { color: C.background2 }, line: { type: 'none' }, objectName: 'Meaning card ' + (i + 1) });
+      T(s2, [{ text: t, options: { bold: true, fontSize: 15, breakLine: true } }, { text: sentence, options: { fontSize: 12, breakLine: true } },
+        { text: mark, options: { bold: true, fontSize: 13, color: col } }], x + 0.15, y + 0.08, w - 0.8, h - 0.16, { valign: 'middle', paraSpaceAfter: 3, objectName: 'Meaning text ' + (i + 1) });
+      s2.addShape(pres.ShapeType.ellipse, { x: x + w - 0.58, y: y + 0.12, w: 0.42, h: 0.42, fill: { color: C.accent1 }, line: { type: 'none' }, objectName: 'Meaning count circle ' + (i + 1) });
+      T(s2, String(n), x + w - 0.58, y + 0.12, 0.42, 0.42, { fontSize: 14, bold: true, align: 'center', valign: 'middle', objectName: 'Meaning count ' + (i + 1) });
+      const left = x < rcx;
+      line2(left ? x + w : x, y + h / 2, ax, ay, 'Meaning arrow ' + (i + 1));
+    });
+    // outline quality: weaker clue, under the roof
+    s2.addShape(pres.ShapeType.roundRect, { x: 3.8, y: 3.75, w: 2.4, h: 0.95, rectRadius: 0.08, fill: { color: 'E4E4E4' }, line: { type: 'none' }, objectName: 'Outline quality card' });
+    T(s2, [{ text: 'Outline quality (3): ', options: { bold: true } }, { text: 'a doubtful outline may not be a real building. A weaker clue.' }],
+      3.9, 3.75, 2.2, 0.95, { fontSize: 11, valign: 'middle', objectName: 'Outline quality text' });
+    line2(rcx, 3.75, rcx, rcy + 0.5, 'Outline quality arrow');
+    // bottom strip
+    s2.addShape(pres.ShapeType.roundRect, { x: 0.5, y: 4.9, w: 9, h: 0.38, rectRadius: 0.08, fill: { color: 'FDF0D5' }, line: { type: 'none' }, objectName: 'Importance banner' });
+    T(s2, [{ text: 'Most important clue: roof size (23% of the model\'s decisions). ', options: { bold: true } }, { text: 'The model combines all 15; no single feature decides.' }],
+      0.62, 4.9, 8.8, 0.38, { fontSize: 12, valign: 'middle', objectName: 'Importance text' });
+    s2.addNotes('This slide shows what each group of features tells the model. In the middle is one roof described by 15 numbers. On the left, two clues that point towards a good roof: a bigger roof has more room for panels, and a roof in a dense town is usually larger and less shaded. On the right, two clues that point the other way: more trees around the roof, and tall trees close to it, mean more shade. At the bottom, the outline quality is a weaker clue: a doubtful outline might not be a real building. I checked the direction of size, tree cover and tree height against my labels. The model does not follow one rule; it combines all 15 clues, and roof size is the most important, at 23 percent of its decisions. Tree cover and tree height carry similar information, which is why adding tree height did not improve the accuracy.');
+  }
+
   // 10 Area types (optional)
   s = pres.addSlide({ masterName: 'CONTENT', sectionTitle: 'Method' });
   s.addText('Three kinds of places', { placeholder: 'title' });
