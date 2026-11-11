@@ -13,7 +13,7 @@ Keep from the old report, unchanged: title block (page 1 table), Tables 1-5, Fig
 - PM Surya Ghar subsidy: up to ₹78,000 for 3 kW
 - Little free land for solar farms; roofs already exist
 - Problem: homestead houses, coconut/jack/mango trees, shade; map area ≠ usable roof
-- Why big data: ~13 M buildings (polygons); tree-height map ~82 billion pixels; laptop 8 GB RAM → Google Colab, Spark, Sedona
+- Why big data: ~13 M buildings (polygons); tree-height map ~82 billion pixels; too large for a desktop workflow → Google Colab, Spark, Sedona
 - Goal 1: how many roofs suitable, free area, GW, TWh, CO₂, savings, by district and area type
 - Goal 2: use course tools (Sedona/Spark, PostGIS, MapReduce, K-means, FP-Growth, Random Forest) and see what each adds
 

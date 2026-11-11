@@ -1,7 +1,7 @@
 """
 Kerala rooftop solar dashboard (Streamlit).
 
-Run on the laptop:   streamlit run dashboard/app.py
+Run locally:   streamlit run dashboard/app.py
 Data: unzip results/dashboard_data.zip (made by notebook 12) into dashboard/data/.
 """
 import json

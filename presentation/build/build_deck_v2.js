@@ -142,7 +142,7 @@ const td = (t, o = {}) => ({ text: t, options: { fontSize: 14, color: C.text1, .
   s.addText('Why it needs big data tools', { placeholder: 'title' });
   const r4 = framed(s, 'roofs_nightlights.png', 0.5, 1.25, 3.0, 3.75, 'Kerala drawn from sampled roofs', 'Roofs map');
   caption(s, '40,000 of 13 million roofs, plotted', 0.5, r4.y + r4.h + 0.06, r4.w + 0.2);
-  const sc = [['19.4 M', 'building outlines downloaded'], ['82 billion', 'pixels in the 1 m tree-height map'], ['14 GB', 'of project data in the cloud'], ['8 GB', 'RAM on my laptop: not enough']];
+  const sc = [['19.4 M', 'building outlines downloaded'], ['82 billion', 'pixels in the 1 m tree-height map'], ['14 GB', 'of project data in the cloud'], ['12', 'notebooks run in Google Colab']];
   for (let i = 0; i < 4; i++) {
     const y = 1.25 + i * 0.95;
     card(s, 3.9, y, 2.75, 0.82, 'Scale card ' + (i + 1));
@@ -156,7 +156,7 @@ const td = (t, o = {}) => ({ text: t, options: { fontSize: 14, color: C.text1, .
     await iconCircle(s, tools[i][0], 6.95, y, 0.55, 'Tool icon ' + (i + 1));
     T(s, [{ text: tools[i][1], options: { bold: true, breakLine: true } }, { text: tools[i][2] }], 7.6, y, 1.9, 0.55, { fontSize: 13, valign: 'middle', objectName: 'Tool ' + (i + 1) });
   }
-  s.addNotes('Why big data? I downloaded 19.4 million building outlines. The tree-height map alone has 82 billion pixels. The project data is about 14 gigabytes, and my laptop has only 8 gigabytes of memory, so it cannot even open the data. So everything ran in the cloud on Google Colab, with Apache Spark for parallel processing, Apache Sedona for spatial operations, PostGIS as a spatial database and Spark MLlib for machine learning.');
+  s.addNotes('Why big data? I downloaded 19.4 million building outlines. The tree-height map alone has 82 billion pixels. The project data is about 14 gigabytes, which is too large for a normal desktop workflow. So everything ran in the cloud on Google Colab, with Apache Spark for parallel processing, Apache Sedona for spatial operations, PostGIS as a spatial database and Spark MLlib for machine learning.');
 
   // ===================== METHOD =====================
   pres.addSection({ title: 'Method' });
