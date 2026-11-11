@@ -7,7 +7,7 @@ const {
 const FIG = 'D:/claude_anti/Rooftop solar potential(b_spatial)/report/figures/';
 const OUT = process.argv[2];
 const FONT = 'Times New Roman';
-const ACC = '1F4E8C';                 // heading colour
+const ACC = '000000';                 // all headings black
 const W = 9638;                       // text width, A4 with 2 cm margins (DXA)
 const SZ = 22;                        // 11 pt body
 
@@ -37,15 +37,14 @@ const figure = (file, widthPx, cap) => {
   return [new Paragraph({ alignment: AlignmentType.CENTER, keepNext: true, spacing: { before: 100, after: 40 },
     children: [new ImageRun({ type: 'png', data, transformation: { width: widthPx, height: Math.round(widthPx * h / w) },
       altText: { title: cap, description: cap, name: file } })] }),
-  new Paragraph({ alignment: AlignmentType.JUSTIFIED, spacing: { after: 160, line: 240 }, children: runs(cap, { size: 18, italics: true, color: '444444' }) })];
+  new Paragraph({ alignment: AlignmentType.JUSTIFIED, spacing: { after: 160, line: 240 }, children: runs(cap, { size: 18, italics: true, color: '000000' }) })];
 };
 const thin = { style: BorderStyle.SINGLE, size: 4, color: 'BFBFBF' };
 const none = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
-const rule = { style: BorderStyle.SINGLE, size: 8, color: '404040' };
+const rule = { style: BorderStyle.SINGLE, size: 8, color: '000000' };
 const cell = (text, width, o = {}) => new TableCell({
   width: { size: width, type: WidthType.DXA },
   borders: { top: o.top || none, bottom: o.bottom || thin, left: none, right: none },
-  shading: o.head ? { fill: 'E8EEF6', type: ShadingType.CLEAR, color: 'auto' } : undefined,
   margins: { top: 40, bottom: 40, left: 80, right: 80 },
   children: [new Paragraph({ alignment: o.right ? AlignmentType.RIGHT : AlignmentType.LEFT, keepNext: !o.last,
     children: runs(String(text), { size: 18, bold: !!o.head }) })],
@@ -59,32 +58,29 @@ const table = (cap, headers, rows, widths, o = {}) => {
       ...rows.map((r, ri) => new TableRow({ cantSplit: true, children: r.map((c, i) => cell(c, widths[i],
         { right: right.includes(i), last: ri === rows.length - 1, bottom: ri === rows.length - 1 ? rule : thin })) })),
     ] }),
-    ...(o.note ? [new Paragraph({ spacing: { before: 40, after: 140 }, children: runs(o.note, { size: 17, italics: true, color: '555555' }) })]
+    ...(o.note ? [new Paragraph({ spacing: { before: 40, after: 140 }, children: runs(o.note, { size: 17, italics: true, color: '000000' }) })]
       : [new Paragraph({ spacing: { after: 100 }, children: [] })]),
   ];
 };
-const link = (text, url) => new ExternalHyperlink({ link: url, children: [new TextRun({ text, style: 'Hyperlink', color: '0563C1', underline: {}, size: 18 })] });
+const link = (text, url) => new ExternalHyperlink({ link: url, children: [new TextRun({ text, color: '000000', size: 18 })] });
 
 // ---------- page 1 ----------
 const info = (a, b, c, d, first, last) => new TableRow({ children: [[a, 1500, true], [b, 3319, false], [c, 1500, true], [d, 3319, false]].map(([t, w, bold]) =>
   new TableCell({ width: { size: w, type: WidthType.DXA }, borders: { top: first ? rule : none, bottom: last ? rule : none, left: none, right: none },
     margins: { top: 30, bottom: 30, left: 60, right: 60 },
-    children: [new Paragraph({ children: [new TextRun({ text: t, bold, size: 20, color: bold ? ACC : '000000' })] })] })) });
+    children: [new Paragraph({ children: [new TextRun({ text: t, bold, size: 21, color: '000000' })] })] })) });
 const page1 = [
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 0, after: 80 },
-    children: [new TextRun({ text: 'Rooftop Solar Potential of Kerala from 13 Million Building Footprints', bold: true, size: 34, color: ACC })] }),
+    children: [new TextRun({ text: 'Rooftop Solar Potential of Kerala from 13 Million Building Footprints', bold: true, size: 32, color: '000000' })] }),
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 220 },
-    children: [new TextRun({ text: 'Course Project Report, Spatial Bigdata Analytics (M5221357)', italics: true, size: 22 })] }),
+    children: [new TextRun({ text: 'Course Project Report, Spatial Bigdata Analytics (M5221357)', italics: true, size: 24, color: '000000' })] }),
   new Table({ width: { size: W, type: WidthType.DXA }, columnWidths: [1500, 3319, 1500, 3319], rows: [
     info('Submitted by', 'Muhammed Shahid S', 'Submitted to', 'Manoj Kumar T K', true, false),
     info('Roll No.', '253308', 'Date', 'November 2026', false, false),
     info('Programme', 'M.Sc. Data Science and Geoinformatics', 'Institution', 'Digital University Kerala', false, true),
   ] }),
-  new Paragraph({ spacing: { before: 240, after: 200, line: 264 }, alignment: AlignmentType.JUSTIFIED,
-    shading: { type: ShadingType.CLEAR, color: 'auto', fill: 'EEF3F9' },
-    border: { left: { style: BorderStyle.SINGLE, size: 18, color: ACC, space: 8 } },
-    indent: { left: 160, right: 160 },
-    children: runs('**Abstract.** This project estimates how much electricity could be produced from the rooftops of Kerala and where this potential is located. I used 19.4 million building footprints from Overture Maps, assigned them to the 14 districts and cleaned them in Apache Sedona, which gave 12,989,365 roofs. Each roof was described by its size, shape, solar yield, tree cover and tree height. To train a model, I labelled 300 random roofs on satellite images; an AI model (Gemini) labelled the same roofs, and I checked the disagreements again without seeing the earlier labels. A Random Forest in Spark MLlib was trained on the resulting 290 labels and applied to all roofs. It classified 6.69 million roofs (51.5%) as suitable, and Sedona was then used to calculate the free area of each of them. If every suitable roof installs a system of up to 3 kW, Kerala\'s rooftops could provide 18.5 GW and 28.2 TWh per year, which is about 88% of the state\'s annual electricity requirement. Suitable roofs are much more common in towns (78%) than in tree-covered villages (42%), and Ernakulam, Thrissur and Malappuram have the highest potential.', { size: 21 }) }),
+  new Paragraph({ spacing: { before: 260, after: 80 }, children: [new TextRun({ text: 'Abstract', bold: true, size: 24, color: '000000' })] }),
+  P('This project estimates how much electricity could be produced from the rooftops of Kerala and where this potential is located. I used 19.4 million building footprints from Overture Maps, assigned them to the 14 districts and cleaned them in Apache Sedona, which gave 12,989,365 roofs. Each roof was described by its size, shape, solar yield, tree cover and tree height. To train a classifier, I labelled a random sample of 300 roofs on satellite images (294 could be judged); an AI model (Gemini) labelled the same roofs independently, and I re-checked the disagreements without seeing the earlier labels. A Random Forest in Spark MLlib was trained on the resulting 290 labels and applied to all roofs. It classified 6.69 million roofs (51.5%) as suitable, and I then used Sedona to calculate the free area of each of them. If every suitable roof installs a system of up to 3 kW, Kerala\'s rooftops could provide 18.5 GW and 28.2 TWh per year, which is about 88% of the state\'s annual electricity requirement. Suitable roofs are much more common in towns (78%) than in tree-covered villages (42%), and Ernakulam, Thrissur and Malappuram have the highest potential.'),
 ];
 
 // ---------- body ----------
@@ -93,15 +89,15 @@ const add = (...x) => x.flat().forEach((e) => body.push(e));
 
 add(H1('1. Introduction'),
   P('Kerala produces only about 30% of the electricity it uses, and the rest is bought from outside the state. Under the PM Surya Ghar scheme, a household can get up to ₹78,000 for a 3 kW rooftop system, but in October 2024 the installed rooftop capacity in Kerala was only about 0.95 GW (152,000 systems). Since there is very little free land for large solar plants, rooftops are an important option for increasing solar generation.'),
-  P('However, most houses in Kerala are homesteads surrounded by coconut, jackfruit and mango trees, and many roofs are partly or fully shaded. A roof that appears large on a map may therefore not be useful for solar panels. For planning, one number for the whole state is not enough; it is necessary to know how many roofs are actually suitable and in which districts they are located.'),
-  P('The project is also a big data problem. Kerala has about 13 million buildings, each stored as a polygon, and the tree-height map used here has about 82 billion pixels. This amount of data could not be processed on my laptop (8 GB RAM), so the heavy processing was done in Google Colab using Spark and Sedona. The two main objectives were:'),
-  ...list(['To estimate the number of suitable roofs, their free area, and the resulting capacity, electricity generation, CO₂ savings and household savings for each district and area type.',
-    'To carry out the spatial processing with the tools covered in the course (Apache Sedona on Spark, PostGIS, MapReduce, K-means, FP-Growth and Random Forest in Spark MLlib) and to compare what each tool contributes.'], 'goals'));
+  P('However, most houses in Kerala are homesteads surrounded by coconut, jackfruit and mango trees, and many roofs are partly or fully shaded. A roof that looks large on a map may therefore be of little use for solar panels. A single figure for the whole state is not enough for planning: it is also necessary to know how many roofs are actually suitable and in which districts they are.'),
+  P('This is also a big data problem. Kerala has about 13 million buildings, each stored as a polygon, and the canopy-height map I used has about 82 billion pixels over the state. My laptop has only 8 GB of RAM and could not load this data, so I ran all the heavy processing in Google Colab with Apache Spark and Apache Sedona. The project had two objectives:'),
+  ...list(['To estimate how many roofs in Kerala are suitable for solar panels, how much free area each suitable roof has, and what this gives in capacity, electricity generation, CO₂ savings and household savings, for each district and area type.',
+    'To carry out the spatial processing with the tools covered in the course (Apache Sedona on Spark, PostGIS, MapReduce, K-means, FP-Growth and Random Forest in Spark MLlib), and to compare what each tool contributes.'], 'goals'));
 
 add(H1('2. Methodology'),
   H2('2.1 Data'),
-  P('All datasets used are openly available. For area and distance calculations, the data were projected to UTM zone 43N (EPSG:32643).'),
-  P('The study area is the state of Kerala (about 38,900 km²), divided into 14 districts. The coastal plain is densely built up, while the eastern hills (Idukki, Wayanad and parts of Pathanamthitta) have fewer and more scattered buildings. Figure 1 shows the overall workflow: each step was written as a separate Colab notebook (12 in total), and the outputs of one notebook were saved to Google Drive as GeoParquet or CSV files and read by the next.'),
+  P('All the datasets I used are openly available. For area and distance calculations, I projected the data to UTM zone 43N (EPSG:32643).'),
+  P('The study area is the state of Kerala (about 38,900 km²), which is divided into 14 districts. Buildings are dense on the coastal plain, while the eastern hill districts (Idukki, Wayanad and parts of Pathanamthitta) have fewer and more scattered buildings. Figure 1 shows the workflow. I wrote each step as a separate Colab notebook, 12 in total. Each notebook saved its output to Google Drive as GeoParquet or CSV files, and the next notebook read these files as its input.'),
   ...figure('fig_pipeline.png', 470, 'Figure 1. Workflow of the project, from building footprints to the potential per roof, hexagon and district. Blue boxes are Spark, Sedona and MLlib steps; orange boxes are PostGIS, clustering and labelling steps.'),
   ...table('Table 1. Data used in the project.', ['Data', 'What it gives', 'Size'], [
     ['Overture Maps buildings (release 2026-10-21.0)', 'Building outlines; 84% from Google Open Buildings, 15% OSM, 2% Microsoft', '19.4 M polygons, 1.7 GB'],
@@ -112,7 +108,7 @@ add(H1('2. Methodology'),
     ['My labels', '300 random roofs judged on Esri satellite imagery', '290 usable'],
   ], [3100, 4338, 2200]),
   H2('2.2 District join and cleaning'),
-  P('The buildings were downloaded for a rectangular area around Kerala, which also included parts of Tamil Nadu and Karnataka. Using Apache Sedona, each building was assigned to a district by checking whether its centre point falls inside a district polygon (`ST_Contains` with a broadcast join). Since the district boundaries have up to 4,000 vertices, they were first divided into smaller parts using `ST_SubDivideExplode`, so that the spatial index works efficiently. During cleaning, no invalid geometries or exact duplicates (checked with a geometry hash) were found. Buildings smaller than 10 m² (15,538) were removed, and 2,213,255 outlines with low source confidence were flagged. In total, 13,004,903 buildings were inside Kerala and 12,989,365 roofs were kept, with a total roof area of about 1,175 km² and a median roof size of 69 m². The result was saved as GeoParquet, partitioned by district.'),
+  P('I downloaded the buildings for a rectangular area around Kerala, which also covers parts of Tamil Nadu and Karnataka. Using Apache Sedona, I assigned each building to a district by checking whether its centre point lies inside a district polygon (`ST_Contains` with a broadcast join). The district boundaries have up to 4,000 vertices, so I first split them into smaller parts with `ST_SubDivideExplode`; this keeps the spatial index efficient. During cleaning, I checked the geometries for validity and searched for exact duplicates using a hash of each geometry; neither problem was found. I removed 15,538 buildings smaller than 10 m² and flagged 2,213,255 outlines with low source confidence (below 0.70) without removing them. Of the 13,004,903 buildings inside Kerala, 12,989,365 were kept as roofs, with a total roof area of about 1,175 km² and a median roof size of 69 m². The result was saved as GeoParquet, partitioned by district (Table 2).'),
   ...table('Table 2. Effect of the district join and cleaning steps.', ['Step', 'Buildings'], [
     ['Downloaded for the box around Kerala', '19,355,143'],
     ['Outside Kerala (Tamil Nadu, Karnataka, sea)', '6,350,240'],
@@ -133,11 +129,11 @@ add(H1('2. Methodology'),
   P('Only part of a roof can be used for panels, because some space is needed along the edges and for the stair room and water tank. Instead of using one fixed percentage for all roofs, the free area was calculated for each roof in Sedona. Each suitable roof outline was converted to metres, reduced inward by 0.6 m using `ST_Buffer` with a negative distance, and a further 8 m² was subtracted for the stair room and tank. The areas in metres matched the original areas (median ratio 0.9997). A value of 10 m² per kW was used to convert free area to capacity. Two scenarios were calculated: a technical maximum, where all free area is used, and a realistic case, where each roof is limited to 3 kW, which is the system size supported by the subsidy. CO₂ savings were calculated using 0.727 t per MWh (CEA CO₂ Baseline Database v20). The edge distance (0.3-1.0 m) and stair room area (0-12 m²) were also varied to test the sensitivity of the results.'),
   H2('2.7 Big data processing and analysis'),
   P('To compare performance, the district join was run with plain Spark (a Python function using Shapely, without a spatial index) and with Sedona\'s spatial join, using samples of 10 thousand, 100 thousand and 1 million buildings as well as the full dataset. District totals were also calculated as a MapReduce job on RDDs and as a single Spark SQL `GROUP BY`. In addition, all 13 million roofs (3.3 GB) were loaded into PostgreSQL 16 with PostGIS 3.4, and a radius query, a district query and a nearest-neighbour query were timed with and without a GiST index and with LIST partitioning by district.'),
-  P('For the unsupervised analysis, K-means clustering was applied to 260,447 H3 hexagons using roof count, roof size, built-up share and tree cover, and the number of clusters was selected using the silhouette score. For association rule mining, each roof was represented as a set of simple properties (size class, tree cover class, crowding class, shape and outline confidence), and FP-Growth was run in Spark MLlib with minimum support 0.05 and minimum confidence 0.6. Finally, the results were summarised by district and by H3 hexagon for a web dashboard, which includes a 3D map, a district comparison and a household savings calculator.'));
+  P('For the unsupervised analysis, I applied K-means clustering to 260,447 H3 hexagons, using roof count, roof size, built-up share and tree cover, and chose the number of clusters with the silhouette score. For association rule mining, I represented each roof as a set of simple properties (size class, tree-cover class, crowding class, shape and outline confidence) and ran FP-Growth in Spark MLlib with a minimum support of 0.05 and a minimum confidence of 0.6. Finally, I summarised the results by district and by H3 hexagon and used these summaries in a web dashboard with a 3D map, a district comparison and a household savings calculator.'));
 
 add(H1('3. Results'),
-  H2('3.1 How well the model judges roofs'),
-  ...table('Table 3. Random Forest accuracy on the 290 gold labels.', ['Check', 'Accuracy', 'ROC AUC'], [
+  H2('3.1 Classification accuracy'),
+  ...table('Table 3. Accuracy of the Random Forest classifier and simple baselines (290 gold labels).', ['Check', 'Accuracy', 'ROC AUC'], [
     ['Random Forest, leave one district out (final model)', '0.672', '0.719'],
     ['Same, without the tree-height features', '0.679', '0.712'],
     ['Random Forest, random 5-fold split', '0.703', '0.729'],
@@ -155,11 +151,11 @@ add(H1('3. Results'),
     ['Range of the maximum (edge 0.3-1.0 m, stair room 0-12 m²)', '51-78 GW', '79-119 TWh', '-'],
     ['Installed today (October 2024)', '0.95 GW', '-', '-'],
   ], [4438, 1500, 1800, 1900], { right: [1, 2, 3], note: 'Kerala needs about 32 TWh of electricity a year (CEA projection for 2024-25).' }),
-  P('The realistic scenario corresponds to about 88% of Kerala\'s annual electricity requirement and is about twenty times the rooftop capacity installed today. The technical maximum is about three times the annual demand, which shows that available roof area is not the main limitation for rooftop solar in Kerala.'),
-  P('The technical maximum depends on the assumed edge strip and stair room area. With a narrow 0.3 m edge and no stair room it reaches 77.9 GW, while a wide 1.0 m edge and a 12 m² stair room give 51.5 GW (Figure 4). The earlier simple assumption of 60% of every roof gave 52.0 GW, close to the most cautious setting; the difference is that the free share now depends on each roof\'s own size and shape.'),
-  ...figure('fig_sensitivity.png', 400, 'Figure 4. Technical maximum under different edge-strip and stair-room assumptions. The grey bar is the earlier fixed guess of 60% of every roof; the dark bar is the setting used in this report.'),
-  H2('3.3 Where the potential is'),
-  P('Ernakulam has the highest potential, with 3.68 TWh per year in the realistic scenario, and 70% of its roofs are suitable. It is followed by Thrissur (3.00 TWh) and Malappuram (2.90 TWh), while Wayanad has the lowest value (0.67 TWh). Malappuram has the largest number of buildings (1.60 million), but only 43% of them are suitable, because many are located in villages with dense tree cover. K-means identified three area types (silhouette score 0.699 for k = 3): towns (3.34 million roofs, median roof size 87 m², 64% tree cover within 300 m), homestead villages (9.46 million roofs, 68 m², 94% tree cover) and sparse open land (0.19 million roofs). In towns, 78% of roofs are suitable compared with 42% in villages. However, villages still contribute 11.3 GW of the 18.5 GW, because most roofs are located there.'),
+  P('The realistic scenario corresponds to about 88% of Kerala\'s annual electricity requirement and is roughly twenty times the rooftop capacity installed today. The technical maximum is about three times the annual demand. Roof area is therefore not the main limit on rooftop solar in Kerala.'),
+  P('The technical maximum depends on the edge strip and stair room area that are assumed. With a 0.3 m edge and no stair room it reaches 77.9 GW; with a 1.0 m edge and a 12 m² stair room it falls to 51.5 GW (Figure 4). My earlier simple assumption of 60% of every roof gave 52.0 GW, which is close to the most cautious setting. The difference is that the free share now depends on the size and shape of each roof.'),
+  ...figure('fig_sensitivity.png', 400, 'Figure 4. Technical maximum capacity under different edge-strip and stair-room assumptions. The grey bar is the earlier fixed assumption (60% of every roof); the dark bar is the setting used in this report (0.6 m edge, 8 m² stair room).'),
+  H2('3.3 Results by district and area type'),
+  P('Ernakulam has the highest potential: 3.68 TWh per year in the realistic scenario, with 70% of its roofs suitable. Thrissur (3.00 TWh) and Malappuram (2.90 TWh) follow, and Wayanad has the lowest value (0.67 TWh). Malappuram has the largest number of buildings (1.60 million), but only 43% of them are suitable, because many lie in villages with dense tree cover. K-means identified three area types (silhouette score 0.699 for k = 3): towns (3.34 million roofs, median roof size 87 m², 64% tree cover within 300 m), homestead villages (9.46 million roofs, 68 m², 94% tree cover) and sparse open land (0.19 million roofs) (Table 5). In towns, 78% of roofs are suitable, compared with 42% in villages. Villages still contribute 11.3 of the 18.5 GW, because most of Kerala\'s roofs are located there (Table 6).'),
   ...table('Table 5. Area types found by K-means on H3 hexagons (k = 3).', ['Area type', 'Hexagons', 'Roofs', 'Roofs per hexagon', 'Median roof', 'Trees within 300 m', 'Roofs suitable'], [
     ['Towns', '28,688', '3.34 M', '116', '87 m²', '64%', '78%'],
     ['Homestead villages', '216,229', '9.46 M', '44', '68 m²', '94%', '42%'],
@@ -183,7 +179,7 @@ add(H1('3. Results'),
     ['Kerala', '12,989,365', '51.5%', '18.50', '28.24', '64.29'],
   ], [2438, 1500, 1200, 1500, 1500, 1500], { right: [1, 2, 3, 4, 5] }),
   ...figure('fig_districts.png', 400, 'Figure 5. Yearly electricity potential by district, realistic (blue) and technical maximum (grey).'),
-  ...figure('fig_map.png', 215, 'Figure 6. Realistic solar capacity per H3 hexagon (resolution 7, about 5 km²). The darkest areas are Kochi, Thiruvananthapuram, Thrissur, Kozhikode and Kannur.'),
+  ...figure('fig_map.png', 175, 'Figure 6. Realistic solar capacity per H3 hexagon (resolution 7, about 5 km²). The darkest areas are Kochi, Thiruvananthapuram, Thrissur, Kozhikode and Kannur.'),
   P('FP-Growth produced 186 rules, which were reduced to 36 after removing longer versions of shorter rules. The strongest rule shows that roofs in towns that appear built-up usually have low tree cover around them (confidence 0.77, lift 4.19). Roofs with low-confidence outlines are mostly small (0.73, lift 2.0), and roofs in villages usually have high tree cover (0.62, lift 1.5). These patterns are consistent with the K-means clusters and with the features that the Random Forest found most important.'),
   H2('3.4 Big data processing performance'),
   ...table('Table 7. District join of building centres, run time in seconds.', ['Buildings', 'Plain Spark (Shapely, no index)', 'Apache Sedona', 'Sedona faster by'], [
@@ -199,16 +195,16 @@ add(H1('3. Results'),
     ['5 nearest roofs to a point (KNN, with index)', '-', '0.4 ms', '-'],
   ], [5038, 1500, 1500, 1600], { right: [1, 2, 3] }),
   P('The Spark UI for the dashboard job shows the scale of the processing. One query read 12,989,365 roof predictions (1.1 GB) and 6.69 million free-area records, shuffled about 1.4 GB of data across 8 parallel tasks and cached 1.5 GB in memory. Because of this caching, the later summary steps took seconds instead of minutes.'),
-  ...figure('fig_spark_timeline_crop.png', 420, 'Figure 7. Spark UI event timeline of the dashboard job. The long bar is the main join of 13 million roof records; the later short jobs reused the cached data.'),
-  H2('3.5 What it means for one family'),
-  P('The savings calculator in the dashboard can be used to estimate the effect for a single household. For a 3 kW system in Ernakulam, with a cost of ₹65,000 per kW and a subsidy of ₹78,000, the net cost is about ₹1.17 lakh. The system would generate about 4,580 units per year and save about ₹21,000 on electricity bills, giving a payback period of about 5.6 years.'),
-  ...figure('dashboard_main.png', 420, 'Figure 8. The web dashboard: 3D hexagon map, headline numbers and district ranking (muhammedshahidsds25-collab.github.io/kerala-rooftop-solar/dashboard/web).'));
+  ...figure('fig_spark_timeline_crop.png', 360, 'Figure 7. Spark UI event timeline of the dashboard job. The long bar is the main join of the 13 million roof records; the short jobs after it reused the cached data.'),
+  H2('3.5 Household savings example'),
+  P('I used the savings calculator in the dashboard to estimate the effect for one household. For a 3 kW system in Ernakulam, I assumed an installation cost of ₹65,000 per kW (₹1.95 lakh in total), less the PM Surya Ghar subsidy of ₹78,000, which gives a net cost of about ₹1.17 lakh. At the Ernakulam yield of about 1,527 kWh per kW, the system generates about 4,580 units per year. Assuming the household uses 200 units a month (2,400 units a year) at ₹6 per unit and exports the remaining units at ₹3 per unit, the annual saving is about ₹21,000, and the payback period is about 5.6 years. These prices are assumptions and can be changed in the calculator.'),
+  ...figure('dashboard_main.png', 390, 'Figure 8. The web dashboard: 3D hexagon map, headline numbers and district ranking (muhammedshahidsds25-collab.github.io/kerala-rooftop-solar/dashboard/web).'));
 
 add(H1('4. Discussion'),
   H2('4.1 What the results mean'),
-  P('The results show that about half of Kerala\'s roofs are suitable for solar, and if each suitable roof installs a typical household system, a large part of the state\'s electricity demand could be met from rooftops. Since the technical maximum is much higher than the demand, the main limitations are likely to be cost, grid capacity and the willingness of households to install systems, rather than roof area. Other estimates for Kerala are lower; for example, WRI India reports 10.9 GW of total solar potential, because it includes these practical limits. The value of 18.5 GW in this study lies between such estimates and the technical maximum. The district ranking and the difference between towns and villages are the most reliable results, since they mainly depend on roof size and tree cover. Based on this, solar programmes could focus first on town areas with large and unshaded roofs, while village areas may need a separate approach.'),
-  H2('4.2 What I learned about the tools'),
-  P('The use of a spatial index had the largest effect on performance: Sedona was 3.5 to 5.9 times faster than plain Spark, and a GiST index made the PostGIS radius query about 450 times faster. The choice of method was also important, as the same raster lookup took 6.4 hours with Sedona\'s raster join but only 42 seconds with NumPy. Spark SQL was about ten times faster than the MapReduce version, mainly because of its query optimiser and column-based processing. Caching data in memory reduced repeated summary steps from minutes to seconds. Since my laptop could not handle the data, Google Colab was necessary, and the same code can be run on a cluster without major changes.'),
+  P('The results show that about half of Kerala\'s roofs are suitable for solar. If each suitable roof installed a typical household system, a large part of the state\'s electricity demand could be met from rooftops. The technical maximum is much higher than the demand, so the main limits are likely to be cost, grid capacity and the willingness of households to install systems, rather than roof area. Other estimates for Kerala are lower; WRI India, for example, reports 10.9 GW of total solar potential, because it includes these practical limits. The realistic value of 18.5 GW in this study lies between such estimates and the technical maximum of 64.3 GW. I consider the district ranking and the difference between towns and villages to be the most reliable results, because they depend mainly on roof size and tree cover, which the data capture well. On this basis, solar programmes could start in town areas, where roofs are larger and less shaded. Village areas would need a separate approach, because a smaller share of their roofs is suitable.'),
+  H2('4.2 Observations on the big data tools'),
+  P('A spatial index had the largest effect on performance. Sedona, which uses a spatial index, was 3.5 to 5.9 times faster than plain Spark, and a GiST index made the PostGIS radius query about 450 times faster (20,462 ms against 45.4 ms). The choice of method also mattered: the same raster lookup took 385.7 minutes (about 6.4 hours) with Sedona\'s raster join, but only 42 seconds with NumPy array indexing. Spark SQL was about ten times faster than my MapReduce version on RDDs (9.6 s against 97.6 s), mainly because of its query optimiser and column-based processing. Caching the joined data in memory reduced the later summary steps from minutes to seconds. Google Colab was necessary because my laptop could not handle the data, and the same code can run on a Spark cluster without major changes.'),
   H2('4.3 Challenges during the project'),
   P('Several practical problems came up while building the pipeline. Spark 4.1 and the Sedona package included two different copies of the same geometry library (JTS), which stopped Sedona from starting in Colab; this was solved by downloading the Sedona jar files and adding them to the Spark driver class path. The first raster join was far too slow (6.4 hours), and it had to be replaced by NumPy lookups. The ESA WorldCover tree layer turned out to be saturated in Kerala: the tree share within 28 m was 100% for 69% of roofs, because small houses under homestead trees are classed as tree cover. This is why the 1 m canopy-height map was added. Finally, the free tier of Colab has only 2 CPU cores and about 13 GB of memory, so the notebooks were written to save their output after each step, which allowed a run to continue after a disconnection.'),
   H2('4.4 Limitations'),
@@ -217,7 +213,7 @@ add(H1('4. Discussion'),
     'The building footprints, tree heights (about 2018-20) and labelling images (about 2025) are from different years.',
     'Spark was run in local mode on a single Colab machine, and a multi-node cluster was not tested.'], 'lims'),
   H2('4.5 Conclusion and future work'),
-  P('This study estimates that Kerala\'s rooftops could realistically support about 18.5 GW of solar capacity and generate 28 TWh per year, which is close to 90% of the state\'s electricity requirement and would avoid about 20 million tonnes of CO₂ annually. The largest share of this potential is in towns and in the districts of Ernakulam, Thrissur and Malappuram. The project also applied the main tools of the course, including Sedona, Spark, PostGIS, MapReduce, K-means, FP-Growth and Random Forest, to 13 million roofs. Future work could include an independent second labeller and a larger set of labels, roof slope and shading from 3D data, field validation of the free-area method, running the workflow on a cluster, and combining the results with grid and income data to estimate actual adoption.'),
+  P('This study estimates that Kerala\'s rooftops could realistically support about 18.5 GW of solar capacity and generate 28 TWh per year, which is about 88% of the state\'s annual electricity requirement and would avoid about 20 million tonnes of CO₂ annually. The largest share of this potential is in towns and in the districts of Ernakulam, Thrissur and Malappuram. The project also applied the main tools of the course, including Sedona, Spark, PostGIS, MapReduce, K-means, FP-Growth and Random Forest, to 13 million roofs. Future work could include an independent second labeller and a larger set of labels, roof slope and shading from 3D data, field validation of the free-area method, running the workflow on a cluster, and combining the results with grid and income data to estimate actual adoption.'),
   P('**Use of AI tools.** Google Gemini was used as a second labeller for the 300 sample roofs. Claude (Anthropic) was used for help with code, notebooks and the drafting and editing of this report. The labelling, analysis choices and interpretation of the results are my own.'),
   H1('References'),
   ...[
@@ -239,11 +235,11 @@ add(H1('4. Discussion'),
 // ---------- document ----------
 const header = new Header({ children: [new Paragraph({
   tabStops: [{ type: TabStopType.RIGHT, position: W }],
-  border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: '808080', space: 4 } },
-  children: [new TextRun({ text: 'Rooftop Solar Potential of Kerala', size: 17, color: '555555' }),
-    new TextRun({ text: '\tSpatial Big Data Project Report', size: 17, color: '555555' })] })] });
+  border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: '000000', space: 4 } },
+  children: [new TextRun({ text: 'Rooftop Solar Potential of Kerala', size: 17, color: '000000' }),
+    new TextRun({ text: '\tSpatial Big Data Project Report', size: 17, color: '000000' })] })] });
 const footer = new Footer({ children: [new Paragraph({ alignment: AlignmentType.CENTER,
-  children: [new TextRun({ text: 'Page ', size: 17, color: '555555' }), new TextRun({ children: [PageNumber.CURRENT], size: 17, color: '555555' })] })] });
+  children: [new TextRun({ text: 'Page ', size: 17, color: '000000' }), new TextRun({ children: [PageNumber.CURRENT], size: 17, color: '000000' })] })] });
 const numCfg = (ref, fmt, text) => ({ reference: ref, levels: [{ level: 0, format: fmt, text, alignment: AlignmentType.LEFT,
   style: { paragraph: { indent: { left: 460, hanging: 300 } } } }] });
 const doc = new Document({
@@ -253,7 +249,7 @@ const doc = new Document({
     paragraphStyles: [
       { id: 'Heading1', name: 'Heading 1', basedOn: 'Normal', next: 'Normal', quickFormat: true, run: { font: FONT, size: 28, bold: true, color: ACC },
         paragraph: { spacing: { before: 260, after: 110 }, keepNext: true, outlineLevel: 0 } },
-      { id: 'Heading2', name: 'Heading 2', basedOn: 'Normal', next: 'Normal', quickFormat: true, run: { font: FONT, size: 23, bold: true, color: '1A1A1A' },
+      { id: 'Heading2', name: 'Heading 2', basedOn: 'Normal', next: 'Normal', quickFormat: true, run: { font: FONT, size: 23, bold: true, color: '000000' },
         paragraph: { spacing: { before: 170, after: 70 }, keepNext: true, outlineLevel: 1 } },
     ],
   },
