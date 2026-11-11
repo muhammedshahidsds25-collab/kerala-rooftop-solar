@@ -95,7 +95,7 @@ const td = (t, o = {}) => ({ text: t, options: { fontSize: 14, color: C.text1, .
   T(s, 'Mapping 13 million roofs with spatial big data: Apache Sedona and Spark MLlib', 0.5, 2.3, 5.0, 0.8, { fontSize: 18, color: C.accent1, objectName: 'Subtitle' });
   T(s, [{ text: 'Muhammed Shahid S  |  Roll No. 253308', options: { bold: true, breakLine: true } },
     { text: 'M.Sc. Data Science and Geoinformatics, Digital University Kerala', options: { breakLine: true } },
-    { text: 'Supervisor: Manoj Kumar Sir', options: { breakLine: true } },
+    { text: 'Supervisor: Manoj Kumar T K', options: { breakLine: true } },
     { text: 'Spatial Bigdata Analytics (M5221357)  |  12 November 2026' }], 0.5, 3.55, 5.3, 1.4, { fontSize: 14, color: C.background1, paraSpaceAfter: 4, objectName: 'Author details' });
   const hx = size('cover_kerala_hex.png'), hh = 5.3, hw = hh * hx.w / hx.h;
   s.addImage({ path: FIG + 'cover_kerala_hex.png', x: 9.5 - hw, y: 0.16, w: hw, h: hh, altText: 'Kerala drawn from 7,070 glowing hexagons of rooftop solar capacity', objectName: 'Kerala hexagon art' });
