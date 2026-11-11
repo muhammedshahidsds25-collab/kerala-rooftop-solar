@@ -100,7 +100,7 @@ const td = (t, o = {}) => ({ text: t, options: { fontSize: 14, color: C.text1, .
   const hx = size('cover_kerala_hex.png'), hh = 5.3, hw = hh * hx.w / hx.h;
   s.addImage({ path: FIG + 'cover_kerala_hex.png', x: 9.5 - hw, y: 0.16, w: hw, h: hh, altText: 'Kerala drawn from 7,070 glowing hexagons of rooftop solar capacity', objectName: 'Kerala hexagon art' });
   T(s, 'Each glowing cell = solar potential of ~5 km² of roofs', 5.9, 5.1, 1.75, 0.4, { fontSize: 10, italic: true, color: C.accent5, objectName: 'Art caption' });
-  s.addNotes('TIMING GUIDE (about 12 minutes): Problem 2 min (slides 1-4), Method 6 min (slides 5-14), Results 3 min (15-18), Wrap-up 1 min (19-20). If short of time, skip slide 8 (speed tests) and slide 10 (area types).\n\nGood morning. My project asks a simple question: how much electricity could Kerala make from its own rooftops? To answer it I mapped every building in Kerala, about 13 million, using spatial big data tools. The picture on the right is Kerala drawn only from my results; every glowing cell is a piece of land with solar potential.');
+  s.addNotes('TIMING GUIDE (about 12 minutes): Problem 2 min (slides 1-4), Method 6 min (slides 5-15), Results 3 min (16-19), Wrap-up 1 min (20-21). If short of time, skip slide 8 (speed tests) and slide 11 (area types).\n\nGood morning. My project asks a simple question: how much electricity could Kerala make from its own rooftops? To answer it I mapped every building in Kerala, about 13 million, using spatial big data tools. The picture on the right is Kerala drawn only from my results; every glowing cell is a piece of land with solar potential.');
 
   // 2 Hook
   s = pres.addSlide({ masterName: 'COVER', sectionTitle: 'Problem' });
@@ -236,6 +236,20 @@ const td = (t, o = {}) => ({ text: t, options: { fontSize: 14, color: C.text1, .
   T(s, '6 numbers for every roof', 6.4, 1.3, 3.1, 0.45, { fontSize: 18, bold: true, fontFace: 'Cambria', objectName: 'Features heading' });
   facts(s, ['Size and shape of the roof', 'Sunshine (kWh per kW)', 'Tree cover within 28-300 m', 'Tree height within 15 m', 'Crowding (buildings nearby)', 'Outline quality'], 6.4, 1.85, 3.1, 2.8);
   s.addNotes('Step three: describe every roof with numbers. Look at this real satellite view: many Kerala houses sit under coconut and jack trees, and that shade is bad for solar. So for each of the 13 million roofs I calculated six things: its size and shape, the sunshine, tree cover around it, tree height, how crowded the area is, and how reliable the outline is. One lesson: the first raster method took 6.4 hours; rewritten with NumPy it took 42 seconds.');
+
+  // 9b Crowding and shade, drawn
+  s = pres.addSlide({ masterName: 'CONTENT', sectionTitle: 'Method' });
+  s.addText('Crowding and shade, in a picture', { placeholder: 'title' });
+  badge(s, 3);
+  const hd = size('hex_tree_diagram.png'), hdH = 3.05, hdW = hdH * hd.w / hd.h, hdX = (10 - hdW) / 2;
+  s.addImage({ path: FIG + 'hex_tree_diagram.png', x: hdX, y: 1.65, w: hdW, h: hdH,
+    altText: 'Left: seven hexagons with building squares and a count in each. Right: one roof with rings of trees at 28, 140 and 300 metres', objectName: 'Hexagon and tree ring diagram' });
+  const cL = hdX + hdW * 0.245, cR = hdX + hdW * 0.765;      // centres of the two halves of the picture
+  T(s, 'Crowding: buildings per hexagon', cL - 1.9, 1.22, 3.8, 0.38, { fontSize: 15, bold: true, fontFace: 'Cambria', align: 'center', valign: 'middle', objectName: 'Crowding heading' });
+  T(s, 'Shade: trees around the roof', cR - 1.9, 1.22, 3.8, 0.38, { fontSize: 15, bold: true, fontFace: 'Cambria', align: 'center', valign: 'middle', objectName: 'Shade heading' });
+  T(s, 'About 0.1 km² each. Many buildings = town.', cL - 1.9, 4.75, 3.8, 0.3, { fontSize: 12, color: C.accent5, align: 'center', objectName: 'Crowding caption' });
+  T(s, 'More trees near the roof = more shade.', cR - 1.9, 4.75, 3.8, 0.3, { fontSize: 12, color: C.accent5, align: 'center', objectName: 'Shade caption' });
+  s.addNotes('This picture shows two of the six numbers. On the left: the map is cut into small hexagons, a system called H3. I count the buildings inside each hexagon. A hexagon with 14 buildings is a town; one with 2 is open land. On the right: around every roof I draw three rings, at 28, 140 and 300 metres, and measure how much of each ring is covered by trees. More trees close to the roof means more shade on the panels. I did this for all 13 million roofs. This is an illustration, not real data.');
 
   // 10 Area types (optional)
   s = pres.addSlide({ masterName: 'CONTENT', sectionTitle: 'Method' });
