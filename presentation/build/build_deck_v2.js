@@ -233,24 +233,79 @@ const td = (t, o = {}) => ({ text: t, options: { fontSize: 14, color: C.text1, .
   caption(s, 'Real view: Kerala houses among homestead trees (Esri satellite image)', 0.5, r9.y + r9.h + 0.08, 5.6);
   callout(s, 'trees shade small roofs', r9.x + 0.2, r9.y + 0.2, 2.1, 0.4, r9.x + r9.w * 0.49, r9.y + r9.h * 0.55, 'Shade callout');
   callout(s, 'big open roof = good', r9.x + r9.w - 2.1, r9.y + r9.h - 0.6, 1.95, 0.4, r9.x + r9.w * 0.72, r9.y + r9.h * 0.33, 'Open roof callout');
-  T(s, '6 numbers for every roof', 6.4, 1.3, 3.1, 0.45, { fontSize: 18, bold: true, fontFace: 'Cambria', objectName: 'Features heading' });
+  T(s, '6 kinds of roof information', 6.4, 1.3, 3.1, 0.45, { fontSize: 18, bold: true, fontFace: 'Cambria', objectName: 'Features heading' });
   facts(s, ['Size and shape of the roof', 'Sunshine (kWh per kW)', 'Tree cover within 28-300 m', 'Tree height within 15 m', 'Crowding (buildings nearby)', 'Outline quality'], 6.4, 1.85, 3.1, 2.8);
   s.addNotes('Step three: describe every roof with numbers. Look at this real satellite view: many Kerala houses sit under coconut and jack trees, and that shade is bad for solar. So for each of the 13 million roofs I calculated six things: its size and shape, the sunshine, tree cover around it, tree height, how crowded the area is, and how reliable the outline is. One lesson: the first raster method took 6.4 hours; rewritten with NumPy it took 42 seconds.');
 
-  // 9b Crowding and shade, drawn
+  {
+  // 9b How the 15 features are made and used (diagram)
   s = pres.addSlide({ masterName: 'CONTENT', sectionTitle: 'Method' });
-  s.addText('Crowding and shade, in a picture', { placeholder: 'title' });
+  s.addText('How the 15 features are made', { placeholder: 'title' });
   badge(s, 3);
-  const hd = size('hex_tree_diagram.png'), hdH = 3.05, hdW = hdH * hd.w / hd.h, hdX = (10 - hdW) / 2;
-  s.addImage({ path: FIG + 'hex_tree_diagram.png', x: hdX, y: 1.65, w: hdW, h: hdH,
-    altText: 'Left: seven hexagons with building squares and a count in each. Right: one roof with rings of trees at 28, 140 and 300 metres', objectName: 'Hexagon and tree ring diagram' });
-  const cL = hdX + hdW * 0.245, cR = hdX + hdW * 0.765;      // centres of the two halves of the picture
-  T(s, 'Crowding: buildings per hexagon', cL - 1.9, 1.22, 3.8, 0.38, { fontSize: 15, bold: true, fontFace: 'Cambria', align: 'center', valign: 'middle', objectName: 'Crowding heading' });
-  T(s, 'Shade: trees around the roof', cR - 1.9, 1.22, 3.8, 0.38, { fontSize: 15, bold: true, fontFace: 'Cambria', align: 'center', valign: 'middle', objectName: 'Shade heading' });
-  T(s, 'About 0.1 km² each. Many buildings = town.', cL - 1.9, 4.75, 3.8, 0.3, { fontSize: 12, color: C.accent5, align: 'center', objectName: 'Crowding caption' });
-  T(s, 'More trees near the roof = more shade.', cR - 1.9, 4.75, 3.8, 0.3, { fontSize: 12, color: C.accent5, align: 'center', objectName: 'Shade caption' });
-  s.addNotes('This picture shows two of the six numbers. On the left: the map is cut into small hexagons, a system called H3. I count the buildings inside each hexagon. A hexagon with 14 buildings is a town; one with 2 is open land. On the right: around every roof I draw three rings, at 28, 140 and 300 metres, and measure how much of each ring is covered by trees. More trees close to the roof means more shade on the panels. I did this for all 13 million roofs. This is an illustration, not real data.');
+  const arrowLine = (x1, y1, x2, y2, name, color) => s.addShape(pres.ShapeType.line, {
+    x: Math.min(x1, x2), y: Math.min(y1, y2), w: Math.max(Math.abs(x2 - x1), 0.01), h: Math.max(Math.abs(y2 - y1), 0.01),
+    flipH: x2 < x1, flipV: y2 < y1, line: { color: color || HEX.grey, width: 1.5, endArrowType: 'triangle' }, objectName: name });
+  const box = (x, y, w, h, fill, name) => s.addShape(pres.ShapeType.roundRect, { x, y, w, h, rectRadius: 0.06,
+    fill: { color: fill }, line: { type: 'none' }, objectName: name });
+  // column headings
+  T(s, 'Data source', 0.5, 1.12, 2.0, 0.28, { fontSize: 12, bold: true, color: C.accent5, objectName: 'Heading sources' });
+  T(s, 'Features for every roof (number of columns)', 2.85, 1.12, 3.8, 0.28, { fontSize: 12, bold: true, color: C.accent5, objectName: 'Heading features' });
+  T(s, 'Model', 7.0, 1.12, 2.5, 0.28, { fontSize: 12, bold: true, color: C.accent5, objectName: 'Heading model' });
+  // feature groups (y, height)
+  const G = [
+    ['Size and shape', 'roof area · compactness (4πA/P²)', 2],
+    ['Outline quality', 'confidence · low-confidence flag · data source', 3],
+    ['Tree cover', 'trees within 28, 140, 300 m · seen as built-up', 4],
+    ['Tree height', 'tallest tree ≤5 m, ≤15 m · tall trees ≤15 m, ≤30 m', 4],
+    ['Crowding', 'buildings per hexagon · area type (K-means)', 2],
+  ];
+  const gy0 = 1.45, gh = 0.6, gap = 0.08, gx = 2.85, gw = 3.8;
+  const gyc = G.map((_, i) => gy0 + i * (gh + gap) + gh / 2);
+  G.forEach(([t, cols, n], i) => {
+    const y = gy0 + i * (gh + gap);
+    box(gx, y, gw, gh, HEX.light, 'Feature group ' + (i + 1));
+    T(s, [{ text: t, options: { bold: true, fontSize: 13, breakLine: true } }, { text: cols, options: { fontSize: 11 } }],
+      gx + 0.12, y + 0.04, gw - 0.75, gh - 0.08, { valign: 'middle', objectName: 'Feature group text ' + (i + 1) });
+    s.addShape(pres.ShapeType.ellipse, { x: gx + gw - 0.55, y: y + 0.11, w: 0.38, h: 0.38, fill: { color: C.accent1 }, line: { type: 'none' }, objectName: 'Feature count circle ' + (i + 1) });
+    T(s, String(n), gx + gw - 0.55, y + 0.11, 0.38, 0.38, { fontSize: 13, bold: true, align: 'center', valign: 'middle', objectName: 'Feature count ' + (i + 1) });
+  });
+  // data sources (building outline feeds two groups)
+  const S = [['Building outlines', 'Overture Maps', gy0, 2 * gh + gap], ['Tree map, 10 m', 'ESA WorldCover', gy0 + 2 * (gh + gap), gh],
+    ['Tree height, 1 m', 'Meta / WRI canopy map', gy0 + 3 * (gh + gap), gh], ['H3 hexagons', 'count + K-means', gy0 + 4 * (gh + gap), gh]];
+  S.forEach(([t, src, y, h], i) => {
+    box(0.5, y, 2.0, h, 'D9D9D9', 'Source box ' + (i + 1));
+    T(s, [{ text: t, options: { bold: true, fontSize: 12, breakLine: true } }, { text: src, options: { fontSize: 11 } }],
+      0.62, y, 1.8, h, { valign: 'middle', objectName: 'Source text ' + (i + 1) });
+  });
+  arrowLine(2.5, gyc[0], gx, gyc[0], 'Arrow outline to size');
+  arrowLine(2.5, gyc[1], gx, gyc[1], 'Arrow outline to quality');
+  arrowLine(2.5, gyc[2], gx, gyc[2], 'Arrow WorldCover');
+  arrowLine(2.5, gyc[3], gx, gyc[3], 'Arrow Meta');
+  arrowLine(2.5, gyc[4], gx, gyc[4], 'Arrow H3');
+  // model
+  const mx = 7.05, mw = 1.35, my = gy0 + 0.45, mh = 2.5;
+  box(mx, my, mw, mh, HEX.blue, 'Random Forest box');
+  T(s, [{ text: 'Random Forest', options: { bold: true, fontSize: 15, breakLine: true } }, { text: '15 features', options: { fontSize: 13, breakLine: true } },
+    { text: '200 trees', options: { fontSize: 13, breakLine: true } }, { text: 'learned from 290 labelled roofs', options: { fontSize: 11 } }],
+    mx + 0.08, my, mw - 0.16, mh, { color: C.background1, align: 'center', valign: 'middle', objectName: 'Random Forest text' });
+  gyc.forEach((yc, i) => arrowLine(gx + gw, yc, mx, my + 0.3 + i * (mh - 0.6) / 4, 'Arrow to model ' + (i + 1), HEX.blue));
+  const ox = 8.6, ow = 0.9;
+  box(ox, my + 0.55, ow, 0.6, C.accent1, 'Output good');
+  T(s, 'Good', ox, my + 0.55, ow, 0.6, { fontSize: 14, bold: true, align: 'center', valign: 'middle', objectName: 'Output good text' });
+  box(ox, my + mh - 1.15, ow, 0.6, 'D9D9D9', 'Output not good');
+  T(s, 'Not good', ox, my + mh - 1.15, ow, 0.6, { fontSize: 14, bold: true, align: 'center', valign: 'middle', objectName: 'Output not good text' });
+  arrowLine(mx + mw, my + 0.85, ox, my + 0.85, 'Arrow to good', HEX.blue);
+  arrowLine(mx + mw, my + mh - 0.85, ox, my + mh - 0.85, 'Arrow to not good', HEX.blue);
+  T(s, 'for all 13 M roofs', mx, my + mh + 0.08, 2.45, 0.3, { fontSize: 12, bold: true, align: 'center', objectName: 'Model note' });
+  // sunshine: not a model input
+  const sy = gy0 + 5 * (gh + gap) + 0.02;
+  box(0.5, sy, 9.0, 0.36, 'FDF0D5', 'Sunshine note box');
+  T(s, [{ text: 'Sunshine (Global Solar Atlas) is not a model input: ', options: { bold: true } },
+    { text: 'it only shows location, so it is used later, free area × yield = electricity.' }], 0.62, sy, 8.8, 0.36,
+    { fontSize: 12, valign: 'middle', objectName: 'Sunshine note' });
+  s.addNotes('This slide shows how the features are made and used. On the left are the data sources. The building outline gives two groups: size and shape, and outline quality. The ESA WorldCover map gives tree cover in three rings and whether the roof looks built-up. The Meta map gives four tree-height numbers. The H3 hexagons give crowding and the area type from K-means. Together that is 2 + 3 + 4 + 4 + 2 = 15 numbers for every roof. The Random Forest, with 200 trees, learned from 290 labelled roofs how these numbers relate to good and not good roofs, and then judged all 13 million roofs. Sunshine is not a model input, because it changes only slowly across Kerala and mostly shows location; it is used later to turn free area into electricity.');
 
+  }
   // 10 Area types (optional)
   s = pres.addSlide({ masterName: 'CONTENT', sectionTitle: 'Method' });
   s.addText('Three kinds of places', { placeholder: 'title' });
