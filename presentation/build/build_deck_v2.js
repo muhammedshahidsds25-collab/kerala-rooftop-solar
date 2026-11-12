@@ -311,21 +311,21 @@ const td = (t, o = {}) => ({ text: t, options: { fontSize: 14, color: C.text1, .
     const s3 = pres.addSlide({ masterName: 'CONTENT', sectionTitle: 'Method' });
     s3.addText('The features, as pictures', { placeholder: 'title' });
     badge(s3, 4);
-    const fp = size('features_on_roof.png'), fh = 3.2, fw = fh * fp.w / fp.h, fx = (10 - fw) / 2;
+    const fp = size('features_on_roof.png'), fh = 3.15, fw = fh * fp.w / fp.h, fx = (10 - fw) / 2;
     s3.addImage({ path: FIG + 'features_on_roof.png', x: fx, y: 1.55, w: fw, h: fh,
-      altText: 'Three panels. Top view of one roof with size, shape and three tree rings; side view of the tree height; a hexagon counting buildings for crowding',
+      altText: 'Four panels: two roofs with the same area but different shapes; a tree canopy map with three houses and a 28 m zone around each (68%, 33% and 0% trees); a side view of tree height; a hexagon counting buildings',
       objectName: 'Features picture' });
-    const fy = 1.55, fhh = 3.1, fww = fhh * fp.w / fp.h, fx2 = (10 - fww) / 2;
-    const px = [fx2 + fww * 0.20, fx2 + fww * 0.555, fx2 + fww * 0.855];   // centres of the three panels
-    const ph = [['SIZE, SHAPE, TREE COVER', 'the roof and 3 rings of trees', 2.4], ['TREE HEIGHT', 'how tall the trees are', 2.0], ['CROWDING', 'how many buildings are nearby', 1.9]];
-    ph.forEach(([t, sub, w], i) => {
-      T(s3, [{ text: t, options: { bold: true, fontSize: 13, breakLine: true } }, { text: sub, options: { fontSize: 11, color: '6B6A66' } }], px[i] - w / 2 - 0.1, 1.12, w + 0.2, 0.55,
+    const cuts = [0.0, 0.16, 0.55, 0.78, 1.0];
+    const ph = [['SIZE & SHAPE', 'same area, 2 shapes'], ['TREE COVER', '% of trees in a zone around each roof'], ['TREE HEIGHT', 'how tall the trees are'], ['CROWDING', 'buildings nearby']];
+    ph.forEach(([t, sub], i) => {
+      const x0 = fx + fw * cuts[i], w = fw * (cuts[i + 1] - cuts[i]);
+      T(s3, [{ text: t, options: { bold: true, fontSize: 13, breakLine: true } }, { text: sub, options: { fontSize: 10, color: '6B6A66' } }], x0, 1.1, w, 0.5,
         { align: 'center', valign: 'middle', fontFace: 'Cambria', objectName: 'Panel heading ' + (i + 1) });
     });
-    s3.addShape(pres.ShapeType.roundRect, { x: 0.5, y: 4.78, w: 9, h: 0.46, rectRadius: 0.08, fill: { color: 'FDF0D5' }, line: { type: 'none' }, objectName: 'Features banner' });
-    T(s3, [{ text: '6  Outline quality: ', options: { bold: true } }, { text: 'how reliable the building outline is (confidence, source, low-confidence flag). ' },
-      { text: 'Sunshine is not an input.', options: { bold: true } }], 0.62, 4.78, 8.8, 0.46, { fontSize: 12, valign: 'middle', objectName: 'Features banner text' });
-    s3.addNotes('This picture shows what the features look like. On the left, one roof seen from above. Its size is the area, and its shape is how compact the outline is. Around the roof are three rings, at 28, 140 and 300 metres, and for each ring I measure the share of trees. In the middle, the side view shows tree height: I take the tallest tree within about 5 and 15 metres, and the share of ground under trees of 5 metres or more. On the right, the map is cut into hexagons of about 0.1 square kilometres, and I count the buildings inside each hexagon; this is the crowding, and it also gives the area type from K-means: town, village or open land. The last feature, outline quality, is how reliable the building outline is. Sunshine is not an input to the model.');
+    s3.addShape(pres.ShapeType.roundRect, { x: 0.5, y: 4.8, w: 9, h: 0.44, rectRadius: 0.08, fill: { color: 'FDF0D5' }, line: { type: 'none' }, objectName: 'Features banner' });
+    T(s3, [{ text: 'Also: outline quality ', options: { bold: true } }, { text: '(how reliable the building outline is). ' },
+      { text: 'Sunshine is not an input.', options: { bold: true } }], 0.62, 4.8, 8.8, 0.44, { fontSize: 12, valign: 'middle', objectName: 'Features banner text' });
+    s3.addNotes('This slide shows the features as pictures. First, size and shape: these two roofs have the same area, 100 square metres, but the square one is compact and easy to fill with panels, and the thin one is harder to use. Second, tree cover: the green is the tree canopy. Around every roof I draw a zone of 28 metres, and also 140 and 300 metres, and measure how much of it is trees. House A is close to the trees, so 68 percent of its zone is trees and its roof is shaded. House B is at the edge, 33 percent. House C is in the open, 0 percent, so it gets full sun. Third, tree height: the tallest tree near the roof. Fourth, crowding: the number of buildings in each hexagon, which also gives the area type. The last feature, outline quality, is how reliable the building outline is. Sunshine is not an input to the model. The map is a drawing to explain the idea; the percentages are measured on the drawing.');
   }
 
   // 12 Step 4b Random Forest
