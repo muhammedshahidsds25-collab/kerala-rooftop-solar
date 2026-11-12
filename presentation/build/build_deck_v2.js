@@ -163,8 +163,8 @@ const td = (t, o = {}) => ({ text: t, options: { fontSize: 14, color: C.text1, .
   // 5 Pipeline
   s = pres.addSlide({ masterName: 'CONTENT', sectionTitle: 'Method' });
   s.addText('The method in six steps', { placeholder: 'title' });
-  const pipe = [[ic.FaDownload, 'Collect', 'buildings, sun, trees'], [ic.FaBroom, 'Clean & join', 'Sedona → 13.0 M roofs'], [ic.FaRulerCombined, 'Describe', 'size, sun, trees'],
-    [ic.FaTags, 'Label & learn', 'Random Forest'], [ic.FaSolarPanel, 'Measure', 'free roof area'], [ic.FaChartBar, 'Show', 'results + dashboard']];
+  const pipe = [[ic.FaDownload, 'Collect', 'buildings, sun, trees'], [ic.FaBroom, 'Clean & join', 'Sedona → 13.0 M roofs'], [ic.FaTags, 'Label', '290 example roofs'],
+    [ic.FaRulerCombined, 'Describe & learn', 'features + Random Forest'], [ic.FaSolarPanel, 'Measure', 'free roof area'], [ic.FaChartBar, 'Show', 'results + dashboard']];
   for (let i = 0; i < 6; i++) {
     const x = 0.5 + i * 1.53;
     card(s, x, 1.45, 1.38, 2.6, 'Pipeline step ' + (i + 1));
@@ -178,7 +178,7 @@ const td = (t, o = {}) => ({ text: t, options: { fontSize: 14, color: C.text1, .
   T(s, [{ text: '19.4 M buildings', options: { bold: true } }, { text: '  →  ' }, { text: '13.0 M roofs', options: { bold: true } }, { text: '  →  ' },
     { text: '6.7 M good roofs', options: { bold: true } }, { text: '  →  ' }, { text: '18.5 GW of solar', options: { bold: true, color: C.accent2 } }],
     0.7, 4.35, 8.6, 0.7, { fontSize: 18, align: 'center', valign: 'middle', objectName: 'Funnel text' });
-  s.addNotes('Here is the whole method in six steps; each next slide shows one step with the real screen. One, collect the data. Two, clean it and join every building to its district. Three, describe every roof. Four, label examples and train a machine learning model. Five, measure the free area on each good roof. Six, summarise and show the results. The bottom line is the funnel: from 19.4 million buildings to 13 million roofs, to 6.7 million good roofs, to 18.5 gigawatts of solar.');
+  s.addNotes('Here is the whole method in six steps; each next slide shows one step with the real screen. One, collect the data. Two, clean it and join every building to its district. Three, label example roofs so the computer knows what a good roof is. Four, describe every roof with numbers and train a machine learning model on the labelled roofs. Five, measure the free area on each good roof. Six, summarise and show the results. The bottom line is the funnel: from 19.4 million buildings to 13 million roofs, to 6.7 million good roofs, to 18.5 gigawatts of solar.');
 
   // 6 Step 1 Collect
   s = pres.addSlide({ masterName: 'CONTENT', sectionTitle: 'Method' });
@@ -208,23 +208,40 @@ const td = (t, o = {}) => ({ text: t, options: { fontSize: 14, color: C.text1, .
   facts(s, ['Sedona put each of 19.4 M buildings into its district', 'Removed 6.35 M outside Kerala and 15,538 tiny ones', 'Saved as files split by district (GeoParquet)'], 6.4, 2.55, 3.1, 2.4);
   s.addNotes('Step two: clean and join. This is a real screen from one of my Google Colab notebooks. Apache Sedona checked, for each of the 19.4 million buildings, which district it lies in. That is a spatial join. I removed 6.35 million buildings outside Kerala and about 15 thousand tiny ones under 10 square metres. 13 million roofs remain, saved as files split by district.');
 
+  // 11 Step 4 Labelling
+  s = pres.addSlide({ masterName: 'CONTENT', sectionTitle: 'Method' });
+  s.addText('Teach the computer: labelling', { placeholder: 'title' });
+  badge(s, 3);
+  const r11 = framed(s, 'crop_qgis_label.png', 0.5, 1.3, 5.6, 3.3, 'QGIS labelling tool with a roof outlined in cyan and Good, Bad and Not a building buttons', 'QGIS labelling screenshot');
+  caption(s, 'Real screen: my QGIS labelling tool (Python script)', 0.5, r11.y + r11.h + 0.08, 5.6);
+  callout(s, 'click: Good / Bad', r11.x + 0.6, r11.y + 0.5, 1.75, 0.4, r11.x + r11.w * 0.71, r11.y + 0.06, 'Buttons callout');
+  callout(s, 'roof to judge', r11.x + 0.45, r11.y + r11.h - 0.65, 1.5, 0.4, r11.x + r11.w * 0.49, r11.y + r11.h * 0.37, 'Roof callout');
+  const lab = [['300', 'random roofs, judged by me and by an AI'], ['218', 'we agreed on (74%)'], ['72', 'disagreements re-checked blind'], ['290', 'final "gold" labels']];
+  for (let i = 0; i < 4; i++) {
+    const y = 1.3 + i * 0.86;
+    card(s, 6.4, y, 3.1, 0.74, 'Label card ' + (i + 1), i === 3 ? { color: C.accent1 } : undefined);
+    T(s, lab[i][0], 6.5, y, 0.85, 0.74, { fontSize: 24, bold: true, fontFace: 'Cambria', valign: 'middle', objectName: 'Label number ' + (i + 1) });
+    T(s, lab[i][1], 7.35, y, 2.1, 0.74, { fontSize: 12, valign: 'middle', objectName: 'Label text ' + (i + 1) });
+  }
+  s.addNotes('Step three: a computer cannot learn "good roof" without examples. So I built this tool in QGIS. It zooms to a random roof, outlined in cyan, and I click Good, Bad or Not a building. I judged 300 random roofs, 21 per district. An AI vision model, Google Gemini, judged the same roofs separately. We agreed on 218. For the disagreements I looked again blind, without seeing either old answer. That gives 290 reliable gold labels. These labels are the answers; next, I describe every roof with numbers, which the model uses as clues.');
+
   // 9 Step 3 Describe
   s = pres.addSlide({ masterName: 'CONTENT', sectionTitle: 'Method' });
   s.addText('Describe every roof', { placeholder: 'title' });
-  badge(s, 3);
+  badge(s, 4);
   const r9 = framed(s, 'crop_trees.png', 0.5, 1.3, 5.6, 3.3, 'Satellite view of Kerala houses among coconut and homestead trees', 'Trees screenshot');
   caption(s, 'Real view: Kerala houses among homestead trees (Esri satellite image)', 0.5, r9.y + r9.h + 0.08, 5.6);
   callout(s, 'trees shade small roofs', r9.x + 0.2, r9.y + 0.2, 2.1, 0.4, r9.x + r9.w * 0.49, r9.y + r9.h * 0.55, 'Shade callout');
   callout(s, 'big open roof = good', r9.x + r9.w - 2.1, r9.y + r9.h - 0.6, 1.95, 0.4, r9.x + r9.w * 0.72, r9.y + r9.h * 0.33, 'Open roof callout');
   T(s, '6 kinds of roof information', 6.4, 1.3, 3.1, 0.45, { fontSize: 18, bold: true, fontFace: 'Cambria', objectName: 'Features heading' });
   facts(s, ['Size and shape of the roof', 'Sunshine (kWh per kW)', 'Tree cover within 28-300 m', 'Tree height within 15 m', 'Crowding (buildings nearby)', 'Outline quality'], 6.4, 1.85, 3.1, 2.8);
-  s.addNotes('Step three: describe every roof with numbers. Look at this real satellite view: many Kerala houses sit under coconut and jack trees, and that shade is bad for solar. So for each of the 13 million roofs I calculated six things: its size and shape, the sunshine, tree cover around it, tree height, how crowded the area is, and how reliable the outline is. One lesson: the first raster method took 6.4 hours; rewritten with NumPy it took 42 seconds.');
+  s.addNotes('Step four: now that we have the answers, I describe every roof with numbers, which are the clues. Look at this real satellite view: many Kerala houses sit under coconut and jack trees, and that shade is bad for solar. So for each of the 13 million roofs I calculated six things: its size and shape, the sunshine, tree cover around it, tree height, how crowded the area is, and how reliable the outline is. One lesson: the first raster method took 6.4 hours; rewritten with NumPy it took 42 seconds.');
 
   {
   // 9b How the 15 features are made and used (diagram)
   s = pres.addSlide({ masterName: 'CONTENT', sectionTitle: 'Method' });
   s.addText('How the 15 features are made', { placeholder: 'title' });
-  badge(s, 3);
+  badge(s, 4);
   const arrowLine = (x1, y1, x2, y2, name, color) => s.addShape(pres.ShapeType.line, {
     x: Math.min(x1, x2), y: Math.min(y1, y2), w: Math.max(Math.abs(x2 - x1), 0.01), h: Math.max(Math.abs(y2 - y1), 0.01),
     flipH: x2 < x1, flipV: y2 < y1, line: { color: color || HEX.grey, width: 1.5, endArrowType: 'triangle' }, objectName: name });
@@ -293,7 +310,7 @@ const td = (t, o = {}) => ({ text: t, options: { fontSize: 14, color: C.text1, .
   {
     const s3 = pres.addSlide({ masterName: 'CONTENT', sectionTitle: 'Method' });
     s3.addText('The features, as pictures', { placeholder: 'title' });
-    badge(s3, 3);
+    badge(s3, 4);
     const fp = size('features_on_roof.png'), fh = 3.2, fw = fh * fp.w / fp.h, fx = (10 - fw) / 2;
     s3.addImage({ path: FIG + 'features_on_roof.png', x: fx, y: 1.55, w: fw, h: fh,
       altText: 'Three panels. Top view of one roof with size, shape and three tree rings; side view of the tree height; a hexagon counting buildings for crowding',
@@ -311,23 +328,6 @@ const td = (t, o = {}) => ({ text: t, options: { fontSize: 14, color: C.text1, .
     s3.addNotes('This picture shows what the features look like. On the left, one roof seen from above. Its size is the area, and its shape is how compact the outline is. Around the roof are three rings, at 28, 140 and 300 metres, and for each ring I measure the share of trees. In the middle, the side view shows tree height: I take the tallest tree within about 5 and 15 metres, and the share of ground under trees of 5 metres or more. On the right, the map is cut into hexagons of about 0.1 square kilometres, and I count the buildings inside each hexagon; this is the crowding, and it also gives the area type from K-means: town, village or open land. The last feature, outline quality, is how reliable the building outline is. Sunshine is not an input to the model.');
   }
 
-  // 11 Step 4 Labelling
-  s = pres.addSlide({ masterName: 'CONTENT', sectionTitle: 'Method' });
-  s.addText('Teach the computer: labelling', { placeholder: 'title' });
-  badge(s, 4);
-  const r11 = framed(s, 'crop_qgis_label.png', 0.5, 1.3, 5.6, 3.3, 'QGIS labelling tool with a roof outlined in cyan and Good, Bad and Not a building buttons', 'QGIS labelling screenshot');
-  caption(s, 'Real screen: my QGIS labelling tool (Python script)', 0.5, r11.y + r11.h + 0.08, 5.6);
-  callout(s, 'click: Good / Bad', r11.x + 0.6, r11.y + 0.5, 1.75, 0.4, r11.x + r11.w * 0.71, r11.y + 0.06, 'Buttons callout');
-  callout(s, 'roof to judge', r11.x + 0.45, r11.y + r11.h - 0.65, 1.5, 0.4, r11.x + r11.w * 0.49, r11.y + r11.h * 0.37, 'Roof callout');
-  const lab = [['300', 'random roofs, judged by me and by an AI'], ['218', 'we agreed on (74%)'], ['72', 'disagreements re-checked blind'], ['290', 'final "gold" labels']];
-  for (let i = 0; i < 4; i++) {
-    const y = 1.3 + i * 0.86;
-    card(s, 6.4, y, 3.1, 0.74, 'Label card ' + (i + 1), i === 3 ? { color: C.accent1 } : undefined);
-    T(s, lab[i][0], 6.5, y, 0.85, 0.74, { fontSize: 24, bold: true, fontFace: 'Cambria', valign: 'middle', objectName: 'Label number ' + (i + 1) });
-    T(s, lab[i][1], 7.35, y, 2.1, 0.74, { fontSize: 12, valign: 'middle', objectName: 'Label text ' + (i + 1) });
-  }
-  s.addNotes('Step four: a computer cannot learn "good roof" without examples. So I built this tool in QGIS. It zooms to a random roof, outlined in cyan, and I click Good, Bad or Not a building. I judged 300 random roofs, 21 per district. An AI vision model, Google Gemini, judged the same roofs separately. We agreed on 218. For the disagreements I looked again blind, without seeing either old answer. That gives 290 reliable gold labels.');
-
   // 12 Step 4b Random Forest
   s = pres.addSlide({ masterName: 'CONTENT', sectionTitle: 'Method' });
   s.addText('Random Forest judges 13 M roofs', { placeholder: 'title' });
@@ -340,7 +340,7 @@ const td = (t, o = {}) => ({ text: t, options: { fontSize: 14, color: C.text1, .
     x: 5.1, y: 1.25, w: 4.4, h: 3.4, barDir: 'bar', chartColors: [HEX.amber], title: 'What the model looks at (% of decisions)', dataLabelFontSize: 12,
     valAxisHidden: true, valGridLine: { style: 'none' }, ...{ ...chartBase, valGridLine: { style: 'none' } } });
   T(s, 'Tested fairly: trained on 13 districts, tested on the 14th, 14 times. Result: 6.7 M roofs (52%) are suitable.', 0.5, 4.75, 9, 0.35, { fontSize: 12, color: C.accent5, objectName: 'Model note' });
-  s.addNotes('With the 290 labels I trained a Random Forest, which is many decision trees voting together, in Spark MLlib. To test it fairly I trained on 13 districts and tested on the 14th it had never seen, 14 times. It is correct 67 percent of the time; guessing gives 54. The most important clue is roof size, then trees near the roof. Then the model judged all 13 million roofs: 6.7 million, about half, are suitable.');
+  s.addNotes('Now the model. With the 290 labels and the 15 features, I trained a Random Forest, which is many decision trees voting together, in Spark MLlib. To test it fairly I trained on 13 districts and tested on the 14th it had never seen, 14 times. It is correct 67 percent of the time; guessing gives 54. The most important clue is roof size, then trees near the roof. Then the model judged all 13 million roofs: 6.7 million, about half, are suitable.');
 
   // 13 Step 5 Free space
   s = pres.addSlide({ masterName: 'CONTENT', sectionTitle: 'Method' });
