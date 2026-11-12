@@ -100,7 +100,7 @@ const td = (t, o = {}) => ({ text: t, options: { fontSize: 14, color: C.text1, .
   const hx = size('cover_kerala_hex.png'), hh = 5.3, hw = hh * hx.w / hx.h;
   s.addImage({ path: FIG + 'cover_kerala_hex.png', x: 9.5 - hw, y: 0.16, w: hw, h: hh, altText: 'Kerala drawn from 7,070 glowing hexagons of rooftop solar capacity', objectName: 'Kerala hexagon art' });
   T(s, 'Each glowing cell = solar potential of ~5 km² of roofs', 5.9, 5.1, 1.75, 0.4, { fontSize: 10, italic: true, color: C.accent5, objectName: 'Art caption' });
-  s.addNotes('TIMING GUIDE (about 12 minutes): Problem 2 min (slides 1-4), Method 6 min (slides 5-16), Results 3 min (17-20), Wrap-up 1 min (21-22). If short of time, skip slide 8 (speed tests) and slide 12 (area types).\n\nGood morning. My project asks a simple question: how much electricity could Kerala make from its own rooftops? To answer it I mapped every building in Kerala, about 13 million, using spatial big data tools. The picture on the right is Kerala drawn only from my results; every glowing cell is a piece of land with solar potential.');
+  s.addNotes('TIMING GUIDE (about 12 minutes): Problem 2 min (slides 1-4), Method 6 min (slides 5-14), Results 3 min (15-18), Wrap-up 1 min (19-20). If short of time, skip slide 8 (Describe every roof), because slides 9 and 10 explain the features in more detail.\n\nGood morning. My project asks a simple question: how much electricity could Kerala make from its own rooftops? To answer it I mapped every building in Kerala, about 13 million, using spatial big data tools. The picture on the right is Kerala drawn only from my results; every glowing cell is a piece of land with solar potential.');
 
   // 2 Hook
   s = pres.addSlide({ masterName: 'COVER', sectionTitle: 'Problem' });
@@ -208,23 +208,6 @@ const td = (t, o = {}) => ({ text: t, options: { fontSize: 14, color: C.text1, .
   facts(s, ['Sedona put each of 19.4 M buildings into its district', 'Removed 6.35 M outside Kerala and 15,538 tiny ones', 'Saved as files split by district (GeoParquet)'], 6.4, 2.55, 3.1, 2.4);
   s.addNotes('Step two: clean and join. This is a real screen from one of my Google Colab notebooks. Apache Sedona checked, for each of the 19.4 million buildings, which district it lies in. That is a spatial join. I removed 6.35 million buildings outside Kerala and about 15 thousand tiny ones under 10 square metres. 13 million roofs remain, saved as files split by district.');
 
-  // 8 Speed tests (optional)
-  s = pres.addSlide({ masterName: 'CONTENT', sectionTitle: 'Method' });
-  s.addText('Why the right tool matters', { placeholder: 'title' });
-  badge(s, 2);
-  s.addChart(pres.charts.BAR, [{ name: 'Speed-up', labels: ['10 thousand', '100 thousand', '1 million', '19.4 million*'], values: [4.6, 3.5, 4.5, 5.9] }], {
-    x: 0.5, y: 1.25, w: 5.3, h: 3.55, barDir: 'col', chartColors: [HEX.blue], title: 'Times faster: Sedona against plain Spark (same join)', dataLabelFormatCode: '0.0"x"',
-    dataLabelFontSize: 14, valAxisMinVal: 0, valAxisMaxVal: 7, ...chartBase });
-  T(s, '*plain Spark estimated at full size: 805 s against 137 s', 0.5, 4.85, 5.3, 0.3, { fontSize: 10, color: C.accent5, objectName: 'Chart footnote' });
-  const sp = [['450×', 'faster map search with a PostGIS spatial index (20 s → 45 ms)'], ['10×', 'faster with a partitioned table (1.2 s → 0.12 s)'], ['10×', 'Spark SQL faster than MapReduce (98 s → 10 s)']];
-  for (let i = 0; i < 3; i++) {
-    const y = 1.25 + i * 1.22;
-    card(s, 6.1, y, 3.4, 1.07, 'Speed card ' + (i + 1));
-    T(s, sp[i][0], 6.25, y, 1.1, 1.07, { fontSize: 28, bold: true, fontFace: 'Cambria', valign: 'middle', objectName: 'Speed number ' + (i + 1) });
-    T(s, sp[i][1], 7.35, y, 2.05, 1.07, { fontSize: 12, valign: 'middle', objectName: 'Speed label ' + (i + 1) });
-  }
-  s.addNotes('OPTIONAL: skip if short of time. I tested whether the big data tools really help. The same district join was 3.5 to 6 times faster with Sedona than with plain Spark, because Sedona uses a spatial index. In the PostGIS database, a spatial index made a 1-kilometre search around Kochi 450 times faster, and splitting the table by district made queries 10 times faster. A modern Spark SQL query was 10 times faster than old-style MapReduce.');
-
   // 9 Step 3 Describe
   s = pres.addSlide({ masterName: 'CONTENT', sectionTitle: 'Method' });
   s.addText('Describe every roof', { placeholder: 'title' });
@@ -327,29 +310,6 @@ const td = (t, o = {}) => ({ text: t, options: { fontSize: 14, color: C.text1, .
       { text: 'Sunshine is not an input.', options: { bold: true } }], 0.62, 4.78, 8.8, 0.46, { fontSize: 12, valign: 'middle', objectName: 'Features banner text' });
     s3.addNotes('This picture shows what the features look like. On the left, one roof seen from above. Its size is the area, and its shape is how compact the outline is. Around the roof are three rings, at 28, 140 and 300 metres, and for each ring I measure the share of trees. In the middle, the side view shows tree height: I take the tallest tree within about 5 and 15 metres, and the share of ground under trees of 5 metres or more. On the right, the map is cut into hexagons of about 0.1 square kilometres, and I count the buildings inside each hexagon; this is the crowding, and it also gives the area type from K-means: town, village or open land. The last feature, outline quality, is how reliable the building outline is. Sunshine is not an input to the model.');
   }
-
-  // 10 Area types (optional)
-  s = pres.addSlide({ masterName: 'CONTENT', sectionTitle: 'Method' });
-  s.addText('Three kinds of places', { placeholder: 'title' });
-  badge(s, 3);
-  T(s, 'K-means clustering on 260,447 hexagons', 0.5, 1.25, 5.3, 0.35, { fontSize: 16, bold: true, fontFace: 'Cambria', objectName: 'K-means heading' });
-  s.addTable([[th('Area type'), th('Roofs'), th('Median roof'), th('Trees ≤300 m')],
-    [td('Towns', { bold: true }), td('3.34 M'), td('87 m²'), td('64%')],
-    [td('Homestead villages', { bold: true }), td('9.46 M'), td('68 m²'), td('94%')],
-    [td('Sparse open land', { bold: true }), td('0.19 M'), td('55 m²'), td('41%')]],
-  { x: 0.5, y: 1.7, w: 5.3, colW: [1.9, 0.95, 1.2, 1.25], rowH: 0.5, border: { type: 'solid', color: HEX.line, pt: 0.75 }, valign: 'middle', margin: [0, 0.08, 0, 0.08], objectName: 'K-means table' });
-  T(s, 'Best fit at k = 3 (silhouette score 0.699)', 0.5, 3.85, 5.3, 0.3, { fontSize: 12, color: C.accent5, objectName: 'Silhouette note' });
-  T(s, 'FP-Growth association rules', 6.1, 1.25, 3.4, 0.35, { fontSize: 16, bold: true, fontFace: 'Cambria', objectName: 'FP-Growth heading' });
-  const rules = [['IF town and built-up', 'THEN few trees around it', 'confidence 77%, lift 4.2'], ['IF village', 'THEN high tree cover', 'confidence 62%, lift 1.5']];
-  for (let i = 0; i < 2; i++) {
-    const y = 1.7 + i * 1.6;
-    card(s, 6.1, y, 3.4, 1.45, 'Rule card ' + (i + 1));
-    T(s, [{ text: rules[i][0], options: { bold: true, breakLine: true } }, { text: rules[i][1], options: { breakLine: true } }, { text: rules[i][2], options: { color: C.accent5 } }],
-      6.3, y + 0.15, 3.0, 1.15, { fontSize: 14, valign: 'middle', paraSpaceAfter: 4, objectName: 'Rule text ' + (i + 1) });
-  }
-  s.addShape(pres.ShapeType.roundRect, { x: 0.5, y: 4.35, w: 5.3, h: 0.65, rectRadius: 0.1, fill: { color: C.accent1 }, line: { type: 'none' }, objectName: 'Village banner' });
-  T(s, 'Villages hold 73% of roofs, but trees shade them', 0.7, 4.35, 4.9, 0.65, { fontSize: 14, bold: true, valign: 'middle', objectName: 'Village text' });
-  s.addNotes('OPTIONAL: skip if short of time. Unsupervised learning: K-means grouped Kerala into three kinds of places. Towns have big roofs and fewer trees. Homestead villages have small roofs under many trees, and they hold 73 percent of all roofs. Sparse open land is paddy fields and backwaters. The FP-Growth algorithm found rules that agree, for example: if a roof is in a town and looks built-up, then there are few trees around it, 77 percent of the time.');
 
   // 11 Step 4 Labelling
   s = pres.addSlide({ masterName: 'CONTENT', sectionTitle: 'Method' });
