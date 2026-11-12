@@ -24,6 +24,11 @@ Towns have far more suitable roofs (78%) than tree-shaded homestead villages (42
 Malappuram have the largest potential; Wayanad the smallest. These are technical potentials from roof geometry,
 not a forecast.
 
+## Report and slides
+
+- Final report: [`report/Rooftop_Solar_Kerala_Project_Report.pdf`](report/Rooftop_Solar_Kerala_Project_Report.pdf)
+- Final presentation (20 slides): [`presentation/Rooftop_Solar_Kerala_Final.pptx`](presentation/Rooftop_Solar_Kerala_Final.pptx)
+
 ## Interactive dashboard
 
 Open [`dashboard/web/index.html`](dashboard/web/index.html) in a browser (internet needed for the map):
